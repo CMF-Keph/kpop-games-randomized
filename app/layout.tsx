@@ -17,11 +17,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning={true} data-lt-installed="true">
       <body
-        className={`${montserrat.className} antialiased min-h-screen bg-linear-to-br from-pink-50 via-purple-50 to-blue-50`}
+        className={`${montserrat.className} antialiased min-h-screen bg-linear-to-br from-pink-50 via-purple-50 to-blue-50 p-4`}
       >
-        {children}
+        <main 
+          className="max-w-6xl mx-auto"
+        >
+          {children}
+        </main>        
       </body>
     </html>
   );
