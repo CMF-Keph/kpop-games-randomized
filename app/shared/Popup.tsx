@@ -30,7 +30,7 @@ const Popup = () => {
 
   return (
     <div onMouseDown={() => hide()} className="bg-black/40 w-screen h-screen absolute top-0 left-0 flex flex-wrap justify-center items-center z-50">
-      <div onMouseDown={(e) => e.stopPropagation()} className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl">
+      <div onMouseDown={(e) => e.stopPropagation()} className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl flex flex-col gap-4">
         <div className="flex justify-between items-center">
           <h2 className="text-3xl font-bold bg-linear-to-l from-pink-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">{title ?? "Ventana"}</h2>
           <button onClick={hide} className="text-red-600 hover:bg-pink-100 transition-colors px-2 py-1 rounded-lg cursor-pointer font-bold">X</button>

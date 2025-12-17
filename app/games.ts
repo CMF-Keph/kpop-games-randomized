@@ -9,29 +9,33 @@ export const GAMES: Game[] = [
 		description: 'Listen to a snippet of a song and guess the title!',
 		color: 'from-pink-500 to-purple-500',
 		icon: Music,
-		settings: [
+		settings:
+		{
+			['time-to-guess']:
 			{
-				key: 'time-to-guess',
 				type: 'input',
 				label: 'Time to guess',
-				values: { min: 15, max: 60 },
-				defaultValue: 30
+				values:
+				{
+					['input-value']: { value: 30 },
+					['min-value']: { value: 15 },
+					['max-value']: { value: 60 }
+				}
+
 			},
-			{
-				key: 'modes',
+
+			['modes']: {
 				type: 'checkbox',
 				label: 'Which ruleset you want to play?',
-				values: {
-					availableOptions: [
-						{ key: 'all', value: 'All' },
-						{ key: 'only-girl-groups', value: 'Girl Groups' },
-						{ key: 'only-boy-groups', value: 'Boy Groups' },
-						{ key: 'soloist', value: 'Soloists' }
-					]
-				},
-				defaultValue: 'all' as AvailableSettings
+				values:
+				{
+					['girl-groups']: { value: 'Girl Groups', checked: true },
+					['boy-groups']: { value: 'Boy Groups', checked: true },
+					['soloist']: { value: 'Soloists', checked: true }
+				}
+				,
 			}
-		]
+		}
 	},
 	{
 		id: 'higher-lower' as GameType,
@@ -57,23 +61,19 @@ export interface Game {
 	description: string;
 	color: string;
 	icon: LucideIcon;
-	settings?: Setting[];
+	settings?: Record<string, Setting>;
 }
 
 export interface Setting {
-	key: string;
 	type: SettingType;
 	label: string;
-	values: SettingValue;
-	defaultValue: any;
+	values: Record<string, SettingValue>;
 }
 
-export type SettingType = 'select' | 'checkbox' | 'input';
+export type SettingType = 'checkbox' | 'input';
+
 
 export interface SettingValue {
-	max?: number;
-	min?: number;
-	availableOptions?: { key: AvailableSettings; value: any }[];
+	value: any;
+	checked?: boolean;
 }
-
-export type AvailableSettings = 'all' | 'only-girl-groups' | 'only-boy-groups' | 'soloist';
