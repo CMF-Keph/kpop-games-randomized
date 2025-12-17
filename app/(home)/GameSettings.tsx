@@ -27,7 +27,7 @@ const GameSettings: React.FC<GameSettingsProps> = ({ game }) => {
 				<button
 					key={key}
 					onClick={() => updateSettingValue(settingKey, key, { ...settingValue, checked: !settingValue.checked })}
-					className={`cursor-pointer p-2 w-full transition-colors rounded-lg ${settingValue.checked ? 'bg-pink-600 text-white' : 'bg-gray-100 text-gray-600'}`}
+					className={`cursor-pointer p-2 w-full transition-colors rounded-lg ${settingValue.checked ? 'bg-blue-500 hover:bg-blue-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
 				>
 					{settingValue.value}
 				</button>
@@ -73,6 +73,7 @@ const GameSettings: React.FC<GameSettingsProps> = ({ game }) => {
 					{settingToHtml(setting, key)}
 				</div>
 			))}
+			<button className="bg-linear-to-r from-purple-500 to-pink-500 text-white shadow-md p-2 rounded-lg transition-colors hover:to-pink-700 cursor-pointer">Start game!</button>
 		</div>
 	)
 }
