@@ -11,14 +11,25 @@ export const GAMES: Game[] = [
 		icon: Music,
 		settings: [
 			{
+				key: 'time-to-guess',
 				type: 'input',
 				label: 'Time to guess',
-				values: 30
+				values: { min: 15, max: 60 },
+				defaultValue: 30
 			},
 			{
+				key: 'modes',
 				type: 'checkbox',
 				label: 'Which ruleset you want to play?',
-				values: ['all', 'only-gg', 'only-bb']
+				values: {
+					availableOptions: [
+						{ key: 'all', value: 'All' },
+						{ key: 'only-girl-groups', value: 'Girl Groups' },
+						{ key: 'only-boy-groups', value: 'Boy Groups' },
+						{ key: 'soloist', value: 'Soloists' }
+					]
+				},
+				defaultValue: 'all' as AvailableSettings
 			}
 		]
 	},
@@ -50,14 +61,19 @@ export interface Game {
 }
 
 export interface Setting {
+	key: string;
 	type: SettingType;
 	label: string;
-	values: SettingValue | SettingValue[];
+	values: SettingValue;
+	defaultValue: any;
 }
 
 export type SettingType = 'select' | 'checkbox' | 'input';
 
 export interface SettingValue {
-	type: 'number' | 'list' | 'string';
-	values: any;
+	max?: number;
+	min?: number;
+	availableOptions?: { key: AvailableSettings; value: any }[];
 }
+
+export type AvailableSettings = 'all' | 'only-girl-groups' | 'only-boy-groups' | 'soloist';
