@@ -8,7 +8,19 @@ export const GAMES: Game[] = [
 		name: 'Guess the song',
 		description: 'Listen to a snippet of a song and guess the title!',
 		color: 'from-pink-500 to-purple-500',
-		icon: Music
+		icon: Music,
+		settings: [
+			{
+				type: 'input',
+				label: 'Time to guess',
+				values: 30
+			},
+			{
+				type: 'checkbox',
+				label: 'Which ruleset you want to play?',
+				values: ['all', 'only-gg', 'only-bb']
+			}
+		]
 	},
 	{
 		id: 'higher-lower' as GameType,
@@ -26,10 +38,26 @@ export const GAMES: Game[] = [
 	},
 ];
 
+export type ModesSettings = 'all' | 'only-girl-groups' | 'only-boy-groups'
+
 export interface Game {
 	id: GameType;
 	name: string;
 	description: string;
 	color: string;
-	icon: LucideIcon
+	icon: LucideIcon;
+	settings?: Setting[];
+}
+
+export interface Setting {
+	type: SettingType;
+	label: string;
+	values: SettingValue | SettingValue[];
+}
+
+export type SettingType = 'select' | 'checkbox' | 'input';
+
+export interface SettingValue {
+	type: 'number' | 'list' | 'string';
+	values: any;
 }
