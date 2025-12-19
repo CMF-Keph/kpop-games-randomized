@@ -18,9 +18,9 @@
 
 
 ### MVP
-- [ ] Game select page
+- [x] Game select page
 - [ ] Database to store idols, videos, etc (prisma, postgre)
 - Gamess pages
-  - [ ] Guess song/idol from snippet
+  - [x] Guess song/idol from snippet
   - [ ] Higher of lower MVs
   - [ ] Choose one of a pack of songs/idols/etc with one kind of rule
