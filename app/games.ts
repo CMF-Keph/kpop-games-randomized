@@ -21,7 +21,6 @@ export const GAMES: Game[] = [
 					['min-value']: { value: 15 },
 					['max-value']: { value: 60 }
 				}
-
 			},
 
 			['modes']: {
@@ -32,8 +31,7 @@ export const GAMES: Game[] = [
 					['girl-groups']: { value: 'Girl Groups', checked: true },
 					['boy-groups']: { value: 'Boy Groups', checked: true },
 					['soloist']: { value: 'Soloists', checked: true }
-				}
-				,
+				},
 			}
 		}
 	},
