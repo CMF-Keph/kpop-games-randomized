@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={true} data-lt-installed="true">
       <body
-        className={`${montserrat.className} antialiased min-h-screen bg-linear-to-br from-pink-50 via-purple-50 to-blue-50 p-4`}
+        className={`${montserrat.className} antialiased min-h-screen bg-linear-to-br from-pink-50 via-purple-50 to-blue-50`}
       >
         <PopupProvider>
           <Popup></Popup>

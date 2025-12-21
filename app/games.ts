@@ -23,10 +23,10 @@ export const GAMES: Game[] = [
 					['max-value']: { value: 60 }
 				}
 			},
-			['total-guesses']:
+			['total-rounds']:
 			{
 				type: 'input',
-				label: 'How many do you want to guess?',
+				label: 'How many rounds do you want to play?',
 				values:
 				{
 					['input-value']: { value: 10 },

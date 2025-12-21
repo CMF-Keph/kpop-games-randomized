@@ -74,7 +74,7 @@ const GameSettings: React.FC<GameSettingsProps> = ({ game, onGameStart }) => {
 		Object.entries(settings).map(([key, setting]) => {
 			switch (setting.type) {
 				case 'input':
-					lobbySettings = {...lobbySettings, [key]: setting.values['input-value'] };
+					lobbySettings = {...lobbySettings, [key]: setting.values['input-value'].value };
 					break;
 				case 'checkbox':
 					const selectedValues: string[] = [];
