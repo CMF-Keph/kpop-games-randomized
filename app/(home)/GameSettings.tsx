@@ -1,11 +1,14 @@
-import { useRef, useState } from "react";
-import { Game, Setting, SettingValue } from "../games";
+import { useState } from "react";
+import { Game, Lobby, Setting, SettingValue } from "../games";
+import { usePopup } from "../hook/usePopup";
 
 interface GameSettingsProps {
 	game: Game;
+	onGameStart: (lobbySettings: any) => void;
 }
 
-const GameSettings: React.FC<GameSettingsProps> = ({ game }) => {
+const GameSettings: React.FC<GameSettingsProps> = ({ game, onGameStart }) => {
+	const { hide } = usePopup();
 	const [settings, setSettings] = useState<Record<string, Setting>>(game.settings || {});
 
 	const updateSettingValue = (settingKey: string, optionKey: string, updatedValue: SettingValue) => {
@@ -65,6 +68,42 @@ const GameSettings: React.FC<GameSettingsProps> = ({ game }) => {
 		}
 	}
 
+	const mapToLobby = (): Lobby => {
+		let lobbySettings: Record<string, any> = {};
+
+		Object.entries(settings).map(([key, setting]) => {
+			switch (setting.type) {
+				case 'input':
+					lobbySettings = {...lobbySettings, [key]: setting.values['input-value'] };
+					break;
+				case 'checkbox':
+					const selectedValues: string[] = [];
+					Object.entries(setting.values).map(([key, option]) => {
+						if (option.checked)
+							selectedValues.push(key);
+					});
+					lobbySettings = {...lobbySettings, [key]: selectedValues };
+					break;
+				default:
+					console.info(key, setting, 'type not matched');
+					lobbySettings = {...lobbySettings};
+					break;
+			}			
+		})				
+
+		return {
+			id: 'test-uuid',
+			type: game.id,
+			settings: lobbySettings
+		} as Lobby;
+	}
+
+	const handleStartClick = () => {
+		const lobbySettings = mapToLobby();		
+		onGameStart(lobbySettings);
+		hide();
+	}
+
 	return (
 		<div className="flex flex-col gap-6">
 			{Object.entries(settings).map(([key, setting]) => (
@@ -73,7 +112,7 @@ const GameSettings: React.FC<GameSettingsProps> = ({ game }) => {
 					{settingToHtml(setting, key)}
 				</div>
 			))}
-			<button className="bg-linear-to-r from-purple-500 to-pink-500 text-white shadow-md p-2 rounded-lg transition-colors hover:to-pink-700 cursor-pointer">Start game!</button>
+			<button onClick={handleStartClick} className="bg-linear-to-r from-purple-500 to-pink-500 text-white shadow-md p-2 rounded-lg transition-colors hover:to-pink-700 cursor-pointer">Start game!</button>
 		</div>
 	)
 }

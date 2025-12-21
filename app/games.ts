@@ -9,6 +9,7 @@ export const GAMES: Game[] = [
 		description: 'Listen to a snippet of a song and guess the title!',
 		color: 'from-pink-500 to-purple-500',
 		icon: Music,
+		available: true,
 		settings:
 		{
 			['time-to-guess']:
@@ -50,14 +51,16 @@ export const GAMES: Game[] = [
 		name: 'Higher or Lower!',
 		description: 'Guess which MV has more views on YouTube!',
 		color: 'from-blue-500 to-cyan-500',
-		icon: ArrowUpDown
+		icon: ArrowUpDown,
+		available: false,
 	},
 	{
 		id: 'save-one' as GameType,
 		name: 'Save only one!',
 		description: 'Choose from a random pack of MVs / Idols / Groups which one would you save!',
 		color: 'from-yellow-500 to-orange-500',
-		icon: Grid2x2X
+		icon: Grid2x2X,
+		available: false
 	},
 ];
 
@@ -69,6 +72,7 @@ export interface Game {
 	description: string;
 	color: string;
 	icon: LucideIcon;
+	available: boolean;
 	settings?: Record<string, Setting>;
 }
 
@@ -84,4 +88,10 @@ export type SettingType = 'checkbox' | 'input';
 export interface SettingValue {
 	value: any;
 	checked?: boolean;
+}
+
+export interface Lobby {
+	id: string;
+	type: GameType;
+	settings: Record<string, any>;
 }
