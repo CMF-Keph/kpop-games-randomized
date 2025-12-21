@@ -22,7 +22,17 @@ export const GAMES: Game[] = [
 					['max-value']: { value: 60 }
 				}
 			},
-
+			['total-guesses']:
+			{
+				type: 'input',
+				label: 'How many do you want to guess?',
+				values:
+				{
+					['input-value']: { value: 10 },
+					['min-value']: { value: 5 },
+					['max-value']: { value: 20 }
+				}
+			},
 			['modes']: {
 				type: 'checkbox',
 				label: 'Which ruleset you want to play?',

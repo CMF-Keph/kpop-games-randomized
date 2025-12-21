@@ -1,7 +1,7 @@
 'use client'
 
 import { Setting } from "@/app/games"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface GuessKpopProps {
   settings: Record<string, Setting>
@@ -12,8 +12,12 @@ const GuessKpop: React.FC<GuessKpopProps> = ({settings}) => {
 
   const [tries, setTries] = useState<number>(0);
 
+  useEffect(() => {
+    
+  }, []);
+
   return (
-    <div>
+    <div className="">
       GuessKpop
     </div>
   )
