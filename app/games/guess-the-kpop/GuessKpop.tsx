@@ -1,7 +1,6 @@
 'use client'
 
 import { Lobby } from "@/app/games"
-import { useEffect, useState } from "react";
 import Navbar from "../Navbar";
 
 interface GuessKpopProps {
