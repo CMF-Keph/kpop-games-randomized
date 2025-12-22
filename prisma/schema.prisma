@@ -10,5 +10,47 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"  
+  provider = "postgresql"
+}
+
+enum GroupType {
+  GG
+  BB
+  SOLO
+}
+
+model Group {
+  id        String    @id @default(uuid())
+  name      String
+  imageUrl  String
+  type      GroupType
+  idols     Idol[]
+  videos    Video[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Idol {
+  id        String   @id @default(uuid())
+  name      String
+  imageUrl  String
+  group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId   String
+  createdAt DateTime @default(now())
+
+  @@index([groupId])
+}
+
+model Video {
+  id                String   @id @default(uuid())
+  youtubeId         String   @unique
+  title             String
+  views             BigInt
+  youtubeUploadedAt DateTime
+  youtubeThumbnail  String
+  group             Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId           String
+  createdAt         DateTime @default(now())
+
+  @@index([groupId])
 }

@@ -27,11 +27,15 @@ const GuessKpop: React.FC<GuessKpopProps> = ({ lobby, onReturn }) => {
     []
   );
 
-  const handleOnPlay = () => {
+  const handleOnPlay = (): void => {
     setIsPlaying(true);
     setTimeout(() => {
       setIsPlaying(false);
     }, 5000);
+  }
+
+  const handleOnSelectOption = (optionId: string | undefined): void => {
+    setSelectedOption(optionId);
   }
 
   return (
@@ -65,10 +69,10 @@ const GuessKpop: React.FC<GuessKpopProps> = ({ lobby, onReturn }) => {
           </button>
         </div>
         <div className="flex flex-col gap-2">
-          <GuessKpopAnswer></GuessKpopAnswer>
-          <GuessKpopAnswer></GuessKpopAnswer>
-          <GuessKpopAnswer></GuessKpopAnswer>
-          <GuessKpopAnswer></GuessKpopAnswer>
+          <GuessKpopAnswer onSelectOption={handleOnSelectOption}></GuessKpopAnswer>
+          <GuessKpopAnswer onSelectOption={handleOnSelectOption}></GuessKpopAnswer>
+          <GuessKpopAnswer onSelectOption={handleOnSelectOption}></GuessKpopAnswer>
+          <GuessKpopAnswer onSelectOption={handleOnSelectOption}></GuessKpopAnswer>
         </div>
         <button className="w-full bg-linear-to-r from-pink-500 to-purple-500 rounded-lg shadow p-4 text-white font-medium hover:to-purple-600 transition-colors duration-300 cursor-pointer disabled:cursor-default disabled:opacity-50" disabled={!selectedOption}>Guess the song!</button>
       </div>

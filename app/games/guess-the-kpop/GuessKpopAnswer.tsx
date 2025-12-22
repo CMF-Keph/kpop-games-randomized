@@ -1,6 +1,10 @@
-const GuessKpopAnswer = () => {
+interface GuessKpopAnswerProps {
+	onSelectOption: (optionId: string | undefined) => void;
+}
+
+const GuessKpopAnswer: React.FC<GuessKpopAnswerProps> = ({ onSelectOption }) => {
 	return (
-		<button className="border-2 border-gray-300 rounded-lg p-4 text-left hover:border-purple-300 hover:bg-purple-50 transition-colors duration-500 cursor-pointer">
+		<button onClick={() => onSelectOption('1')} className="border-2 border-gray-300 rounded-lg p-4 text-left hover:border-purple-300 hover:bg-purple-50 transition-colors duration-500 cursor-pointer">
 			Option
 		</button>
 	)
