@@ -39,9 +39,9 @@ export const GAMES: Game[] = [
 				label: 'Which ruleset you want to play?',
 				values:
 				{
-					['girl-groups']: { value: 'Girl Groups', checked: true },
-					['boy-groups']: { value: 'Boy Groups', checked: true },
-					['soloist']: { value: 'Soloists', checked: true }
+					['GG']: { value: 'Girl Groups', checked: true },
+					['BB']: { value: 'Boy Groups', checked: true },
+					['SOLO']: { value: 'Soloists', checked: true }
 				},
 			}
 		}
@@ -94,4 +94,15 @@ export interface Lobby {
 	id: string;
 	type: GameType;
 	settings: Record<string, any>;
+}
+
+export interface Option {
+  videoId: string;
+  answer: string;
+  audioUrl: string;
+  correct: boolean;
+}
+
+export interface ActiveGame {
+  options: Option[];
 }

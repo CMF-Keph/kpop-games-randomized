@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Lobby } from "../games";
 import GameSelect from "./GameSelect";
-import GuessKpop from "../games/guess-the-kpop/GuessKpop";
+import GuessGameWrapper from "../games/guess-the-kpop/GuessGameWrapper";
 
 export const Home = () => {
   const [lobby, setLobby] = useState<Lobby | undefined>();
@@ -22,7 +22,7 @@ export const Home = () => {
 
   switch (lobby.type) {
     case 'guess-song-snippet':  
-      return <GuessKpop lobby={lobby} onReturn={handleOnReturn}></GuessKpop>     
+      return <GuessGameWrapper lobby={lobby} onReturn={handleOnReturn}></GuessGameWrapper>     
     default:
       return <GameSelect onGameStart={handleOnGameStart}></GameSelect>;
   }  
