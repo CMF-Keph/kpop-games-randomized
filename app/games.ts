@@ -12,17 +12,6 @@ export const GAMES: Game[] = [
 		available: true,
 		settings:
 		{
-			['time-to-guess']:
-			{
-				type: 'input',
-				label: 'Time to guess',
-				values:
-				{
-					['input-value']: { value: 30 },
-					['min-value']: { value: 15 },
-					['max-value']: { value: 60 }
-				}
-			},
 			['total-rounds']:
 			{
 				type: 'input',
@@ -101,6 +90,7 @@ export interface Option {
   answer: string;
   audioUrl: string;
   correct: boolean;
+	type: string;
 }
 
 export interface ActiveGame {

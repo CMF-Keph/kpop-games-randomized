@@ -11,9 +11,12 @@ type GroupWithVideos = Group & { videos: Video[] };
 interface GuessGameProps {
   lobby: Lobby
   groups: GroupWithVideos[];
+  onReturn: () => void;
 }
 
-const GuessGame: React.FC<GuessGameProps> = ({ lobby, groups }) => {
+const GuessGame: React.FC<GuessGameProps> = ({ lobby, groups, onReturn }) => {
+  const MAX_TRIES = 3;
+
   const [activeRound, setActiveRound] = useState<number>(0);
   const [totalRounds, setMaxRounds] = useState<number>();
   const [score, setScore] = useState<number>(0);
@@ -23,6 +26,8 @@ const GuessGame: React.FC<GuessGameProps> = ({ lobby, groups }) => {
   const [isPlayerReady, setIsPlayerReady] = useState<boolean>(false);
   const [startTime, setStartTime] = useState<number>(0);
   const playerRef = useRef<any>(null);
+  const [tries, setTries] = useState<number>(0);
+  const [isFinalRound, setIsFinalRound] = useState<boolean>(false);
 
   const durations = useMemo(
     () => Array.from({ length: 20 }, () => Math.random() * 0.4 + 0.6),
@@ -42,9 +47,13 @@ const GuessGame: React.FC<GuessGameProps> = ({ lobby, groups }) => {
       for (let e = 0; e < 4; e++) {
         const randomIndex = Math.floor(Math.random() * groups.length);
         const randomGroup = groups[randomIndex];
+        if (options.find(o => o.type !== randomGroup.type)) {
+          e--;
+          continue;
+        }
+
         const randomVideoIndex = Math.floor(Math.random() * randomGroup.videos.length);
         const randomVideo = randomGroup.videos[randomVideoIndex];
-
         if (options.find(o => o.videoId === randomVideo.id)) {
           e--;
           continue;
@@ -54,7 +63,8 @@ const GuessGame: React.FC<GuessGameProps> = ({ lobby, groups }) => {
           videoId: randomVideo.id,
           answer: randomVideo.title,
           audioUrl: randomVideo.youtubeId,
-          correct: getIfAnwserShouldBeCorrect(options)
+          correct: getIfAnwserShouldBeCorrect(options),
+          type: randomGroup.type
         });
       }
       game.push({ options });
@@ -68,7 +78,9 @@ const GuessGame: React.FC<GuessGameProps> = ({ lobby, groups }) => {
   }, [groups, lobby]);
 
   useEffect(() => {
-    if (window.YT) return;
+    if (window.YT) {
+      window.YT = {}      
+    };
 
     const tag = document.createElement('script');
     tag.src = 'https://www.youtube.com/iframe_api';
@@ -117,6 +129,7 @@ const GuessGame: React.FC<GuessGameProps> = ({ lobby, groups }) => {
     if (!playerRef.current || !isPlayerReady) return;
 
     setIsPlaying(true);
+    setTries(tries + 1);
 
     playerRef.current.seekTo(startTime, true);
     playerRef.current.playVideo();
@@ -142,16 +155,49 @@ const GuessGame: React.FC<GuessGameProps> = ({ lobby, groups }) => {
     setSelectedOption(optionId);
   }
 
+  const handleOnGuess = (): void => {
+    if (!selectedOption) return;
+    setIsFinalRound(true);
+    onStopAudio();
+
+    if (selectedOption === games[activeRound].options.find(o => o.correct)?.videoId) {
+      setScore(score + (100 * (MAX_TRIES - tries + 1)));
+    }
+  }
+
+  const handleOnNext = () => {
+    var nextRound = activeRound + 1;        
+    
+    console.log(nextRound + 1, totalRounds)
+    if ((nextRound) >= totalRounds!) {      
+      onReturn();
+      return;
+    }    
+
+    setActiveRound(activeRound + 1);
+    setSelectedOption(undefined);
+    setTries(0);
+    setIsFinalRound(false);
+  }
+
   return (
     <>
       <div id="player" className="hidden" />
       {isPlayerReady &&
-        <div className="h-[calc(100vh-73.5px)] bg-white shadow-lg rounded-t-xl flex flex-col p-8 gap-8">
+        <div className="h-[calc(100vh-73.5px)] bg-white shadow-lg rounded-t-xl flex flex-col p-8 gap-4">
           <div className="flex flex-wrap w-full justify-between items-center bg-linear-to-r from-pink-100 via-purple-100 to-blue-100 p-3 text-lg rounded-lg shadow">
             <span>Round <span className="text-purple-500">{`${activeRound + 1} / ${totalRounds}`}</span></span>
             <span>Score <span className="text-purple-500">{score}</span></span>
           </div>
-          <div className="bg-linear-to-r from-pink-500 to-purple-500 rounded-lg shadow p-8 text-white flex items-center justify-center flex-col gap-4">
+          <div className="bg-linear-to-r from-pink-500 to-purple-500 rounded-lg shadow p-8 text-white flex items-center justify-center flex-col gap-2">
+            <div className="flex flex-col gap-4 w-full items-center mb-4">
+              <span className="text-lg font-semibold">{tries > 0 ? `${tries} / ${MAX_TRIES}` : 'Click the Play button to begin!'}</span>
+              <div className={`grid grid-cols-${MAX_TRIES} gap-4 w-8/12`}>
+                {[...Array(MAX_TRIES)].map((_, i) => (
+                  <div key={i} className="w-full bg-white p-1 rounded-lg transition-opacity duration-300" style={{ opacity: i < tries ? 0.5 : 1 }}></div>
+                ))}
+              </div>
+            </div>
             <Volume2 size={48}></Volume2>
             <p className="text-lg text-center">Listen to this snipped from the song and try to guess the song!</p>
             <div className="flex items-center justify-center gap-1 h-24">
@@ -169,16 +215,16 @@ const GuessGame: React.FC<GuessGameProps> = ({ lobby, groups }) => {
                 />
               ))}
             </div>
-            <button onClick={isPlaying ? onStopAudio : onPlayAudio} className="bg-white rounded-full p-4 shadow-lg hover:scale-105 transition-transform duration-150 cursor-pointer disabled:opacity-75 disabled:cursor-default" disabled={isPlaying}>
+            <button onClick={isPlaying ? onStopAudio : onPlayAudio} className="bg-white rounded-full p-4 shadow-lg hover:scale-105 transition-transform duration-150 cursor-pointer disabled:opacity-75 disabled:cursor-default" disabled={isPlaying || tries >= MAX_TRIES || isFinalRound}>
               {isPlaying ? <AudioLines size={36} className="text-purple-600"></AudioLines> : <Play size={36} className="text-purple-600"></Play>}
             </button>
           </div>
           <div className="flex flex-col gap-2">
             {games[activeRound]?.options.map((option, index) => (
-              <GuessGameAnswer key={index} option={option} selectedOptionId={selectedOption} onSelectOption={handleOnSelectOption}></GuessGameAnswer>
+              <GuessGameAnswer key={index} option={option} selectedOptionId={selectedOption} onSelectOption={handleOnSelectOption} isFinalRound={isFinalRound}></GuessGameAnswer>
             ))}
           </div>
-          <button className="w-full bg-linear-to-r from-pink-500 to-purple-500 rounded-lg shadow p-4 text-white font-medium hover:to-purple-600 transition-colors duration-300 cursor-pointer disabled:cursor-default disabled:opacity-50" disabled={!selectedOption}>Guess the song!</button>
+          <button onClick={isFinalRound ? handleOnNext : handleOnGuess} className="w-full bg-linear-to-r from-pink-500 to-purple-500 rounded-lg shadow p-4 text-white font-medium hover:to-purple-600 transition-colors duration-300 cursor-pointer disabled:cursor-default disabled:opacity-50" disabled={!selectedOption}>{isFinalRound ? "Next round!" : "Guess the song!"}</button>
         </div>
       }
     </>

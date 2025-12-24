@@ -32,7 +32,7 @@ const GuessGameWrapper: React.FC<GuessGameWrapperProps> = ({ lobby, onReturn }) 
 	return (
 		<section className="flex flex-col">
 			<Navbar onReturn={onReturn}></Navbar>
-			<GuessGame lobby={lobby} groups={groups}></GuessGame>
+			<GuessGame lobby={lobby} groups={groups} onReturn={onReturn}></GuessGame>
 		</section>
 	)
 }
