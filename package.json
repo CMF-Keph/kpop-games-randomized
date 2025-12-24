@@ -17,7 +17,8 @@
     "pg": "^8.16.3",
     "prisma": "^7.2.0",
     "react": "19.2.1",
-    "react-dom": "19.2.1"
+    "react-dom": "19.2.1",
+    "react-lite-youtube-embed": "^3.3.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
