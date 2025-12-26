@@ -1,9 +1,7 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import GuessGame from '../GuessGame';
 import { Group, Video } from '@/app/generated/prisma/browser';
 
-// Mock del componente GuessGameAnswer
 jest.mock('../GuessGameAnswer', () => {
   return function MockGuessGameAnswer() {
     return <div data-testid="guess-game-answer">Answer Option</div>;
@@ -13,17 +11,24 @@ jest.mock('../GuessGameAnswer', () => {
 describe('GuessGame Component', () => {
   const mockOnReturn = jest.fn();
 
-  const mockVideo: Partial<Video> = {
+  const mockVideo: Video = {
     id: '1',
     title: 'Test Video',
     youtubeId: 'dQw4w9WgXcQ',
-    groupId: '1'
+    groupId: '1',
+    createdAt: new Date(),
+    views: BigInt(1000),
+    youtubeThumbnail: 'http://example.com/thumbnail.jpg',
+    youtubeUploadedAt: new Date()
   };
 
-  const mockGroup: Partial<Group> & { videos: Partial<Video>[] } = {
+  const mockGroup: Group & { videos: Video[] } = {
     id: '1',
     name: 'Test Group',
     type: 'GG',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    imageUrl: 'http://example.com/image.jpg',
     videos: [mockVideo],
   };
 

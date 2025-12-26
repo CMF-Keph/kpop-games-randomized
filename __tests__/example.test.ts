@@ -1,8 +1,3 @@
-/**
- * Test de ejemplo para un componente/utilidad simple
- * Este archivo muestra cómo estructurar tests básicos
- */
-
 describe('Ejemplo de Test Básico', () => {
   it('debe pasar una suma simple', () => {
     const resultado = 2 + 2;
