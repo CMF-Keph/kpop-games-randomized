@@ -231,25 +231,25 @@ const GuessGame: React.FC<GuessGameProps> = ({ lobby, groups, onReturn }) => {
         <>
             <div id="player" className="hidden" />
             {isYouTubePlayerReady &&
-                <div className="h-[calc(100vh-73.5px)] bg-white shadow-lg rounded-t-xl flex flex-col p-8 gap-4">
+                <div className="h-full bg-white shadow-lg rounded-xl flex flex-col p-8 gap-4">
                     <div className="flex flex-wrap w-full justify-between items-center bg-linear-to-r from-pink-100 via-purple-100 to-blue-100 p-1 px-3 text-lg rounded-lg shadow">
                         <span>Round <span className="text-purple-500">{`${activeRound + 1} / ${totalRounds}`}</span></span>
                         <span>Score <span className="text-purple-500">{score}</span></span>
                     </div>
-                    <div className="bg-linear-to-r from-pink-500 to-purple-500 rounded-lg shadow p-8 text-white flex items-center justify-center flex-col gap-2">
+                    <div className="bg-linear-to-r from-pink-400 to-purple-400 rounded-lg shadow p-8 flex items-center justify-center flex-col gap-2 text-shadow-lg text-blue-900 font-semibold">
                         <div className="flex flex-col gap-4 w-full items-center mb-4">
                             <div className={`grid grid-cols-${MAX_TRIES} gap-4 w-8/12`}>
                                 {[...Array(MAX_TRIES)].map((_, i) => (
                                     <div className="flex flex-col items-center gap-2" key={i}>
-                                        <span style={{ opacity: i + 1 === tries || i === 0 ? 1 : 0.5 }}>{`+${100 * (MAX_TRIES - i)} (${(3000 + ((tries - (tries - i)) * 2000)) / 1000} sec.)`}</span>
-                                        <div className="w-full bg-white p-1 rounded-lg transition-opacity duration-300" style={{ opacity: i + 1 === tries || i === 0 ? 1 : 0.5 }}></div>
+                                        <span style={{ opacity: i === tries ? 1 : 0.5 }}>{`+${100 * (MAX_TRIES - i)} (${(3000 + ((tries - (tries - i)) * 2000)) / 1000} sec.)`}</span>
+                                        <div className="w-full bg-blue-900 p-1 rounded-lg transition-opacity duration-300" style={{ opacity: i  === tries ? 1 : 0.5 }}></div>
                                     </div>
                                 ))}
                             </div>
                         </div>
                         <div className="flex items-center justify-center gap-1 h-24 w-full relative">
-                            <div className="p-2 rounded-full bg-white/50 w-full shadow shadow-purple"></div>
-                            <div className="absolute top-10 left-0 p-2 rounded-full  bg-linear-to-r from-blue-200 to-blue-300  transition-all duration-100" style={{ width: `${videoDuration > 0 ? Math.min((currentTime / videoDuration) * 100, 100) : 0}%` }}></div>
+                            <div className="p-2 rounded-full bg-blue-900/50 w-full shadow shadow-purple"></div>
+                            <div className="absolute top-10 left-0 p-2 rounded-full  bg-linear-to-r from-pink-900 to-purple-900  transition-all duration-100" style={{ width: `${videoDuration > 0 ? Math.min((currentTime / videoDuration) * 100, 100) : 0}%` }}></div>
                             <div className="flex justify-between w-full absolute top-16 px-2">
                                 <span>0 s</span>
                                 <span>{((3000 + (tries < MAX_TRIES ? tries * 2000 : 2 * 2000)) / 1000)} s</span>
@@ -259,7 +259,7 @@ const GuessGame: React.FC<GuessGameProps> = ({ lobby, groups, onReturn }) => {
                             {isPlaying ? <AudioLines size={36} className="text-purple-600"></AudioLines> : <Play size={36} className="text-purple-600"></Play>}
                         </button>
                     </div>
-                    <div className="flex flex-col gap-2">
+                    <div className="grid grid-cols-2 gap-2">
                         {games[activeRound]?.options.map((option, index) => (
                             <GuessGameAnswer key={index} option={option} selectedOptionId={selectedOption} onSelectOption={handleOnSelectOption} isFinalRound={isFinalRound}></GuessGameAnswer>
                         ))}
