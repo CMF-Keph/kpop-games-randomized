@@ -37,7 +37,7 @@ const GameSettings: React.FC<GameSettingsProps> = ({ game, onGameStart }) => {
 			)
 		});
 
-		return <div className="flex gap-2 w-full justify-between">{checkBoxes}</div>
+		return <div className="flex flex-col md:flex-row gap-2 w-full justify-between">{checkBoxes}</div>
 	}
 
 	const generateInputSection = (setting: Setting, settingsKey: string): React.ReactNode => {
@@ -105,13 +105,15 @@ const GameSettings: React.FC<GameSettingsProps> = ({ game, onGameStart }) => {
 	}
 
 	return (
-		<div className="flex flex-col gap-6">
-			{Object.entries(settings).map(([key, setting]) => (
+		<div className="flex flex-col gap-6 h-full justify-between">
+			<div className="flex flex-col gap-6">
+				{Object.entries(settings).map(([key, setting]) => (
 				<div key={key} className="flex flex-col">
 					<label className="font-medium mb-2 text-lg text-pink-900">{setting.label}</label>
 					{settingToHtml(setting, key)}
 				</div>
 			))}
+			</div>			
 			<button onClick={handleStartClick} className="bg-linear-to-r from-purple-500 to-pink-500 text-white shadow-md p-2 rounded-lg transition-colors hover:to-pink-700 cursor-pointer">Start game!</button>
 		</div>
 	)

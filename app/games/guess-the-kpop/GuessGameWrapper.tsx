@@ -6,8 +6,8 @@ import GuessGame from "./GuessGame";
 import { useEffect, useState } from "react";
 
 interface GuessGameWrapperProps {
-	lobby: Lobby
-	onReturn: () => void;
+    lobby: Lobby
+    onReturn: () => void;
 }
 
 const GuessGameWrapper: React.FC<GuessGameWrapperProps> = ({ lobby, onReturn }) => {
@@ -27,14 +27,14 @@ const GuessGameWrapper: React.FC<GuessGameWrapperProps> = ({ lobby, onReturn }) 
         fetchGroups();
     }, [lobby]);
 
-	if (loading) return <div>Cargando...</div>;
+    if (loading) return <div>Cargando...</div>;
 
-	return (
-		<section className="flex flex-col">
-			<Navbar onReturn={onReturn}></Navbar>
-			<GuessGame lobby={lobby} groups={groups} onReturn={onReturn}></GuessGame>
-		</section>
-	)
+    return (
+        <section className="flex flex-col">
+            <Navbar onReturn={onReturn}></Navbar>
+            <GuessGame lobby={lobby} groups={groups} onReturn={onReturn}></GuessGame>
+        </section>
+    )
 }
 
 export default GuessGameWrapper
