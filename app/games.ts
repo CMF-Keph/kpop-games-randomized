@@ -91,6 +91,7 @@ export interface Option {
   audioUrl: string;
   correct: boolean;
 	type: string;
+	thumbnail: string;
 }
 
 export interface ActiveGame {

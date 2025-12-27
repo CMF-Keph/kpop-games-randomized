@@ -1,11 +1,12 @@
 'use client'
 
 import { ActiveGame, Lobby, Option } from "@/app/games"
-import { useEffect, useMemo, useRef, useState } from "react";
-import { AudioLines, Play, Volume2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { AudioLines, Play } from "lucide-react";
 import GuessGameAnswer from "./GuessGameAnswer";
 import { Group, Video } from "@/app/generated/prisma/browser";
-import { init } from "next/dist/compiled/webpack/webpack";
+import { motion } from "motion/react";
+import Image from "next/image";
 
 type GroupWithVideos = Group & { videos: Video[] };
 
@@ -87,7 +88,8 @@ const GuessGame: React.FC<GuessGameProps> = ({ lobby, groups, onReturn }) => {
                     answer: video.title,
                     audioUrl: video.youtubeId,
                     correct: isCorrect,
-                    type: group.type
+                    type: group.type,
+                    thumbnail: video.youtubeThumbnail
                 });
             }
             game.push({ options });
@@ -228,7 +230,7 @@ const GuessGame: React.FC<GuessGameProps> = ({ lobby, groups, onReturn }) => {
     }
 
     return (
-        <>
+        <div className="relative">
             <div id="player" className="hidden" />
             {isYouTubePlayerReady &&
                 <div className="h-full bg-white shadow-lg rounded-xl flex flex-col p-8 gap-4">
@@ -236,20 +238,20 @@ const GuessGame: React.FC<GuessGameProps> = ({ lobby, groups, onReturn }) => {
                         <span>Round <span className="text-purple-500">{`${activeRound + 1} / ${totalRounds}`}</span></span>
                         <span>Score <span className="text-purple-500">{score}</span></span>
                     </div>
-                    <div className="bg-linear-to-r from-pink-400 to-purple-400 rounded-lg shadow p-8 flex items-center justify-center flex-col gap-2 text-shadow-lg text-blue-900 font-semibold">
+                    <div className="bg-linear-to-r from-pink-400 to-purple-400 rounded-lg shadow p-8 flex items-center justify-center flex-col gap-2 text-shadow-lg text-gray-100 font-semibold">
                         <div className="flex flex-col gap-4 w-full items-center mb-4">
                             <div className={`grid grid-cols-${MAX_TRIES} gap-4 w-8/12`}>
                                 {[...Array(MAX_TRIES)].map((_, i) => (
                                     <div className="flex flex-col items-center gap-2" key={i}>
                                         <span style={{ opacity: i === tries ? 1 : 0.5 }}>{`+${100 * (MAX_TRIES - i)} (${(3000 + ((tries - (tries - i)) * 2000)) / 1000} sec.)`}</span>
-                                        <div className="w-full bg-blue-900 p-1 rounded-lg transition-opacity duration-300" style={{ opacity: i  === tries ? 1 : 0.5 }}></div>
+                                        <div className="w-full bg-white p-1 rounded-lg transition-opacity duration-300" style={{ opacity: i === tries ? 1 : 0.5 }}></div>
                                     </div>
                                 ))}
                             </div>
                         </div>
                         <div className="flex items-center justify-center gap-1 h-24 w-full relative">
-                            <div className="p-2 rounded-full bg-blue-900/50 w-full shadow shadow-purple"></div>
-                            <div className="absolute top-10 left-0 p-2 rounded-full  bg-linear-to-r from-pink-900 to-purple-900  transition-all duration-100" style={{ width: `${videoDuration > 0 ? Math.min((currentTime / videoDuration) * 100, 100) : 0}%` }}></div>
+                            <div className="p-2 rounded-full bg-white/50 w-full shadow shadow-purple"></div>
+                            <div className="absolute top-10 left-0 p-2 rounded-full bg-linear-to-r bg-white transition-all duration-100" style={{ width: `${videoDuration > 0 ? Math.min((currentTime / videoDuration) * 100, 100) : 0}%` }}></div>
                             <div className="flex justify-between w-full absolute top-16 px-2">
                                 <span>0 s</span>
                                 <span>{((3000 + (tries < MAX_TRIES ? tries * 2000 : 2 * 2000)) / 1000)} s</span>
@@ -267,7 +269,17 @@ const GuessGame: React.FC<GuessGameProps> = ({ lobby, groups, onReturn }) => {
                     <button onClick={isFinalRound ? handleOnNext : handleOnGuess} className="w-full bg-linear-to-r from-pink-500 to-purple-500 rounded-lg shadow p-4 text-white font-medium hover:to-purple-600 transition-colors duration-300 cursor-pointer disabled:cursor-default disabled:opacity-50" disabled={!selectedOption}>{isFinalRound ? "Next round!" : "Guess the song!"}</button>
                 </div>
             }
-        </>
+            {isYouTubePlayerReady && isFinalRound &&
+                <motion.div className="w-full h-full bg-white rounded-lg absolute top-0 left-0 flex flex-col gap-12 items-center justify-center" initial={{ scale: 0 }} animate={{ scale: 1 }}>
+                    {selectedOption === games[activeRound].options.find(o => o.correct)?.videoId ? <motion.span animate={{ rotate: 360 }} className="text-4xl text-green-500 text-shadow font-bold">That's right! +{Math.min(100 * (MAX_TRIES - tries + 1), 300)} points</motion.span> : <motion.span animate={{ rotate: 360 }} className="text-4xl text-red-500 text-shadow font-bold">Next time you'll get it right!</motion.span>}
+                    <div className="flex flex-col items-center gap-4">
+                        <span className="font-medium text-lg">{games[activeRound].options.find(o => o.correct)!.answer}</span>
+                        <Image className="rounded-lg shadow-lg" src={games[activeRound].options.find(o => o.correct)!.thumbnail!} alt={games[activeRound].options.find(o => o.correct)!.answer} height={180} width={320}></Image>
+                    </div>
+                    <button onClick={handleOnNext} className="bg-linear-to-r from-pink-500 to-purple-500 rounded-lg text-white p-4 shadow-lg w-80 hover:scale-105 transition-transform duration-150 cursor-pointer">Next round!</button>
+                </motion.div>
+            }
+        </div>
     )
 }
 

@@ -6,22 +6,19 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "lint": "eslint"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
     "@supabase/supabase-js": "^2.89.0",
     "lucide-react": "^0.561.0",
+    "motion": "^12.23.26",
     "next": "16.0.10",
     "pg": "^8.16.3",
     "prisma": "^7.2.0",
     "react": "19.2.1",
-    "react-dom": "19.2.1",
-    "react-lite-youtube-embed": "^3.3.3"
+    "react-dom": "19.2.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -35,8 +32,6 @@
     "dotenv": "^17.2.3",
     "eslint": "^9",
     "eslint-config-next": "16.0.10",
-    "jest": "^30.2.0",
-    "jest-environment-jsdom": "^30.2.0",
     "supabase": "^2.67.3",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
