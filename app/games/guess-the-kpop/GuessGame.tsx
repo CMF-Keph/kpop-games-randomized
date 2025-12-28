@@ -7,6 +7,7 @@ import GuessGameAnswer from "./GuessGameAnswer";
 import { Group, Video } from "@/app/generated/prisma/browser";
 import { motion } from "motion/react";
 import Image from "next/image";
+import { useScoreScreen } from "@/app/hook/useScoreScreen";
 
 type GroupWithVideos = Group & { videos: Video[] };
 
@@ -18,6 +19,8 @@ interface GuessGameProps {
 
 const GuessGame: React.FC<GuessGameProps> = ({ lobby, groups, onReturn }) => {
     const MAX_TRIES = 3;
+
+    const scoreScreen = useScoreScreen();
 
     // Game states
     const [games, setGames] = useState<ActiveGame[]>([]);
@@ -208,6 +211,7 @@ const GuessGame: React.FC<GuessGameProps> = ({ lobby, groups, onReturn }) => {
         if (!selectedOption) return;
         setIsFinalRound(true);
         onStopAudio();
+        scoreScreen.show(<div>Prueba</div>, "Results!");
 
         if (selectedOption === games[activeRound].options.find(o => o.correct)?.videoId) {
             setScore(score + (100 * (MAX_TRIES - tries + 1)));
@@ -268,16 +272,6 @@ const GuessGame: React.FC<GuessGameProps> = ({ lobby, groups, onReturn }) => {
                     </div>
                     <button onClick={isFinalRound ? handleOnNext : handleOnGuess} className="w-full bg-linear-to-r from-pink-500 to-purple-500 rounded-lg shadow p-4 text-white font-medium hover:to-purple-600 transition-colors duration-300 cursor-pointer disabled:cursor-default disabled:opacity-50" disabled={!selectedOption}>{isFinalRound ? "Next round!" : "Guess the song!"}</button>
                 </div>
-            }
-            {isYouTubePlayerReady && isFinalRound &&
-                <motion.div className="w-full h-full bg-white rounded-lg absolute top-0 left-0 flex flex-col gap-12 items-center justify-center" initial={{ scale: 0 }} animate={{ scale: 1 }}>
-                    {selectedOption === games[activeRound].options.find(o => o.correct)?.videoId ? <motion.span animate={{ rotate: 360 }} className="text-4xl text-green-500 text-shadow font-bold">That's right! +{Math.min(100 * (MAX_TRIES - tries + 1), 300)} points</motion.span> : <motion.span animate={{ rotate: 360 }} className="text-4xl text-red-500 text-shadow font-bold">Next time you'll get it right!</motion.span>}
-                    <div className="flex flex-col items-center gap-4">
-                        <span className="font-medium text-lg">{games[activeRound].options.find(o => o.correct)!.answer}</span>
-                        <Image className="rounded-lg shadow-lg" src={games[activeRound].options.find(o => o.correct)!.thumbnail!} alt={games[activeRound].options.find(o => o.correct)!.answer} height={180} width={320}></Image>
-                    </div>
-                    <button onClick={handleOnNext} className="bg-linear-to-r from-pink-500 to-purple-500 rounded-lg text-white p-4 shadow-lg w-80 hover:scale-105 transition-transform duration-150 cursor-pointer">Next round!</button>
-                </motion.div>
             }
         </div>
     )
