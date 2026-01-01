@@ -3,10 +3,10 @@
 import { ActiveGame, Lobby, Option } from "@/app/games"
 import { useEffect, useRef, useState } from "react";
 import { AudioLines, Play } from "lucide-react";
+import { motion } from "framer-motion";
 import GuessGameAnswer from "./GuessGameAnswer";
+import RewardScreen from "./RewardScreen";
 import { Group, Video } from "@/app/generated/prisma/browser";
-import { motion } from "motion/react";
-import Image from "next/image";
 import { useScoreScreen } from "@/app/hook/useScoreScreen";
 
 type GroupWithVideos = Group & { videos: Video[] };
@@ -211,11 +211,27 @@ const GuessGame: React.FC<GuessGameProps> = ({ lobby, groups, onReturn }) => {
         if (!selectedOption) return;
         setIsFinalRound(true);
         onStopAudio();
-        scoreScreen.show(<div>Prueba</div>, "Results!");
 
-        if (selectedOption === games[activeRound].options.find(o => o.correct)?.videoId) {
-            setScore(score + (100 * (MAX_TRIES - tries + 1)));
+        const correctOption = games[activeRound].options.find(o => o.correct);
+        const isCorrect = selectedOption === correctOption?.videoId;
+        const points = isCorrect ? (100 * (MAX_TRIES - tries + 1)) : 0;
+        if (isCorrect) {
+            setScore(score + points);
         }
+
+        // Mostrar ScoreScreen con preview y botón siguiente
+        scoreScreen.show(
+            <RewardScreen
+                score={points}
+                videoTitle={correctOption?.answer || ''}
+                videoId={correctOption?.audioUrl || ''}
+                onNext={() => {
+                    scoreScreen.hide();
+                    handleOnNext();
+                }}
+            />,
+            isCorrect ? '¡Correcto!' : '¡Incorrecto!'
+        );
     }
 
     const handleOnNext = () => {
@@ -234,46 +250,99 @@ const GuessGame: React.FC<GuessGameProps> = ({ lobby, groups, onReturn }) => {
     }
 
     return (
-        <div className="relative">
+        <motion.div className="relative" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <div id="player" className="hidden" />
-            {isYouTubePlayerReady &&
-                <div className="h-full bg-white shadow-lg rounded-xl flex flex-col p-8 gap-4">
-                    <div className="flex flex-wrap w-full justify-between items-center bg-linear-to-r from-pink-100 via-purple-100 to-blue-100 p-1 px-3 text-lg rounded-lg shadow">
+            {isYouTubePlayerReady && (
+                <motion.div
+                    className="h-full bg-white shadow-lg rounded-xl flex flex-col p-8 gap-4"
+                    initial={{ y: 40, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ type: "spring", duration: 0.5 }}
+                >
+                    <motion.div
+                        className="flex flex-wrap w-full justify-between items-center bg-linear-to-r from-pink-100 via-purple-100 to-blue-100 p-1 px-3 text-lg rounded-lg shadow"
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1 }}
+                    >
                         <span>Round <span className="text-purple-500">{`${activeRound + 1} / ${totalRounds}`}</span></span>
                         <span>Score <span className="text-purple-500">{score}</span></span>
-                    </div>
-                    <div className="bg-linear-to-r from-pink-400 to-purple-400 rounded-lg shadow p-8 flex items-center justify-center flex-col gap-2 text-shadow-lg text-gray-100 font-semibold">
-                        <div className="flex flex-col gap-4 w-full items-center mb-4">
+                    </motion.div>
+                    <motion.div
+                        className="bg-linear-to-r from-pink-400 to-purple-400 rounded-lg shadow p-8 flex items-center justify-center flex-col gap-2 text-shadow-lg text-gray-100 font-semibold"
+                        initial={{ opacity: 0, scale: 0.97 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.2 }}
+                    >
+                        <motion.div
+                            className="flex flex-col gap-4 w-full items-center mb-4"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 }}
+                        >
                             <div className={`grid grid-cols-${MAX_TRIES} gap-4 w-8/12`}>
                                 {[...Array(MAX_TRIES)].map((_, i) => (
-                                    <div className="flex flex-col items-center gap-2" key={i}>
-                                        <span style={{ opacity: i === tries ? 1 : 0.5 }}>{`+${100 * (MAX_TRIES - i)} (${(3000 + ((tries - (tries - i)) * 2000)) / 1000} sec.)`}</span>
+                                    <motion.div
+                                        className="flex flex-col items-center gap-2"
+                                        key={i}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: i === tries ? 1 : 0.5, y: 0 }}
+                                        transition={{ delay: 0.35 + i * 0.05 }}
+                                    >
+                                        <span>{`+${100 * (MAX_TRIES - i)} (${(3000 + ((tries - (tries - i)) * 2000)) / 1000} sec.)`}</span>
                                         <div className="w-full bg-white p-1 rounded-lg transition-opacity duration-300" style={{ opacity: i === tries ? 1 : 0.5 }}></div>
-                                    </div>
+                                    </motion.div>
                                 ))}
                             </div>
-                        </div>
-                        <div className="flex items-center justify-center gap-1 h-24 w-full relative">
+                        </motion.div>
+                        <motion.div
+                            className="flex items-center justify-center gap-1 h-24 w-full relative"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.4 }}
+                        >
                             <div className="p-2 rounded-full bg-white/50 w-full shadow shadow-purple"></div>
                             <div className="absolute top-10 left-0 p-2 rounded-full bg-linear-to-r bg-white transition-all duration-100" style={{ width: `${videoDuration > 0 ? Math.min((currentTime / videoDuration) * 100, 100) : 0}%` }}></div>
                             <div className="flex justify-between w-full absolute top-16 px-2">
                                 <span>0 s</span>
                                 <span>{((3000 + (tries < MAX_TRIES ? tries * 2000 : 2 * 2000)) / 1000)} s</span>
                             </div>
-                        </div>
-                        <button onClick={isPlaying ? onStopAudio : onPlayAudio} className="bg-white rounded-full p-4 shadow-lg hover:scale-105 transition-transform duration-150 cursor-pointer disabled:opacity-75 disabled:cursor-default" disabled={isPlaying || tries >= MAX_TRIES || isFinalRound}>
+                        </motion.div>
+                        <motion.button
+                            onClick={isPlaying ? onStopAudio : onPlayAudio}
+                            className="bg-white rounded-full p-4 shadow-lg hover:scale-105 transition-transform duration-150 cursor-pointer disabled:opacity-75 disabled:cursor-default"
+                            disabled={isPlaying || tries >= MAX_TRIES || isFinalRound}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.5 }}
+                        >
                             {isPlaying ? <AudioLines size={36} className="text-purple-600"></AudioLines> : <Play size={36} className="text-purple-600"></Play>}
-                        </button>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
+                        </motion.button>
+                    </motion.div>
+                    <motion.div
+                        className="grid grid-cols-2 gap-2"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.6 }}
+                    >
                         {games[activeRound]?.options.map((option, index) => (
                             <GuessGameAnswer key={index} option={option} selectedOptionId={selectedOption} onSelectOption={handleOnSelectOption} isFinalRound={isFinalRound}></GuessGameAnswer>
                         ))}
-                    </div>
-                    <button onClick={isFinalRound ? handleOnNext : handleOnGuess} className="w-full bg-linear-to-r from-pink-500 to-purple-500 rounded-lg shadow p-4 text-white font-medium hover:to-purple-600 transition-colors duration-300 cursor-pointer disabled:cursor-default disabled:opacity-50" disabled={!selectedOption}>{isFinalRound ? "Next round!" : "Guess the song!"}</button>
-                </div>
-            }
-        </div>
+                    </motion.div>
+                    <motion.button
+                        onClick={handleOnGuess}
+                        className="w-full bg-linear-to-r from-pink-500 to-purple-500 rounded-lg shadow p-4 text-white font-medium hover:to-purple-600 transition-colors duration-300 cursor-pointer disabled:cursor-default disabled:opacity-50"
+                        disabled={!selectedOption}
+                        
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.7 }}
+                    >
+                        {"Guess the song!"}
+                    </motion.button>
+                </motion.div>
+            )}
+        </motion.div>
     )
 }
 

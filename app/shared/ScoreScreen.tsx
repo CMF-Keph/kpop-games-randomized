@@ -29,11 +29,8 @@ const ScoreScreen = () => {
   if (!isOpen) return null;
 
   return (
-    <div onMouseDown={() => hide()} className="bg-black/40 w-screen h-screen absolute top-0 left-0 flex flex-wrap justify-center items-center z-50">
-      <div onMouseDown={(e) => e.stopPropagation()} className="bg-white md:rounded-2xl max-w-md w-full p-6 shadow-2xl flex flex-col gap-4 h-screen md:h-auto ">
-        <div className="flex justify-between items-center">
-          <h2 className="text-3xl font-bold text-pink-800">{title ?? ""}</h2>          
-        </div>        
+    <div className="bg-white/90 w-screen h-screen absolute top-0 left-0 flex flex-wrap justify-center items-center z-50">
+      <div className="bg-white md:rounded-2xl w-auto p-6 shadow-2xl flex flex-col gap-4 h-screen md:h-auto">        
         {content}        
       </div>
     </div>
