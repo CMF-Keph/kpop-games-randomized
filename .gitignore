@@ -45,3 +45,7 @@ prisma/seed/groups
 prisma/seed/idols
 
 /app/generated/prisma
+
+# local
+TODO.md
+
