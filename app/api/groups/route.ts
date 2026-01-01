@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: NextRequest) {
+export const POST = async (request: NextRequest) => {
 	const { modes } = await request.json();
 
 	const groups = await prisma.group.findMany({

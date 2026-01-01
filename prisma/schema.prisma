@@ -54,3 +54,67 @@ model Video {
 
   @@index([groupId])
 }
+
+// Lobby/Sala de juego
+model GameLobby {
+  id          String       @id @default(cuid())
+  code        String       @unique  // Código de 6 caracteres para unirse
+  hostId      String       // ID del usuario que creó el lobby
+  gameType    String       // Tipo de juego (random_dance, guess_song, etc.)
+  status      LobbyStatus  @default(WAITING)
+  maxPlayers  Int          @default(8)
+  settings    Json?        // Configuraciones específicas del juego
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  expiresAt   DateTime     // Para limpiar lobbies abandonados
+  
+  players     LobbyPlayer[]
+  gameSession GameSession?
+}
+
+model LobbyPlayer {
+  id        String    @id @default(cuid())
+  lobbyId   String
+  playerId  String    
+  nickname  String
+  isHost    Boolean   @default(false)
+  isReady   Boolean   @default(false)
+  joinedAt  DateTime  @default(now())
+  
+  lobby     GameLobby @relation(fields: [lobbyId], references: [id], onDelete: Cascade)
+  
+  @@unique([lobbyId, playerId])
+}
+
+model GameSession {
+  id            String   @id @default(cuid())
+  lobbyId       String   @unique
+  currentRound  Int      @default(0)
+  totalRounds   Int
+  gameState     Json     // Estado actual del juego
+  startedAt     DateTime @default(now())
+  endedAt       DateTime?
+  
+  lobby         GameLobby @relation(fields: [lobbyId], references: [id], onDelete: Cascade)
+  scores        PlayerScore[]
+}
+
+model PlayerScore {
+  id            String      @id @default(cuid())
+  sessionId     String
+  playerId      String
+  score         Int         @default(0)
+  correctCount  Int         @default(0)
+  
+  session       GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  
+  @@unique([sessionId, playerId])
+}
+
+enum LobbyStatus {
+  WAITING     // Esperando jugadores
+  STARTING    // Cuenta regresiva para empezar
+  IN_PROGRESS // Juego en curso
+  FINISHED    // Juego terminado
+  ABANDONED   // Lobby abandonado
+}
