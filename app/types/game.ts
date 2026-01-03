@@ -1,5 +1,3 @@
-import { Option } from "../games";
-
 type RoundPhase = 'waiting' | 'playing'| 'guessing' | 'results' | 'listening';
 
 export interface GameState {
@@ -9,19 +7,29 @@ export interface GameState {
 	totalRounds: number;
 	remainingTries: number;
 	options: Option[];
+	modes: string[];
 }
 
 export interface PlayerScore {
 	playerId: string;
 	nickname: string;
 	score: number;
-	correctAnwsers: number;
+	correctAnswers: number;
 }
 
 export interface UseGameModel {
 	gameState: GameState;
 	playerScore: PlayerScore;
-	startGame: () => void;
+	startGame: (options: Option[]) => void;
 	submitAnwser: (anwserId: string) => void;
-	playSong: () => void;
+	playSong: () => void;	
+}
+
+export interface Option {
+  videoId: string;
+  answer: string;
+  audioUrl: string;
+  correct: boolean;
+	type: string;
+	thumbnail: string;
 }

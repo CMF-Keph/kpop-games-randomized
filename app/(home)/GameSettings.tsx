@@ -101,7 +101,7 @@ const GameSettings: React.FC<GameSettingsProps> = ({ game }) => {
 
 	const handleStartClick = () => {
 		const lobbySettings = mapToLobby();
-		sessionStorage.setItem('settings', JSON.stringify(lobbySettings));
+		sessionStorage.setItem('game-settings', JSON.stringify(lobbySettings));
 		router.push('/games/guess-song');
 		hide();
 	}

@@ -13,13 +13,14 @@ export const useMultiplayer = ({ lobbyCode }: UseMultiplayerOptions ): UseGameMo
 				currentRound: 0,
 				totalRounds: 10,
 				remainingTries: 3,
-				options: []
+				options: [],
+				modes: []
 			});
 			const [playerScore, setPlayerScore] = useState<PlayerScore>({
 				playerId: nanoid(12),
 				nickname: 'test',
 				score: 0,
-				correctAnwsers: 0
+				correctAnswers: 0
 			});
 	
 			const startGame = (): void => {
