@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { Game, Lobby, Setting, SettingValue } from "../games";
 import { usePopup } from "../hook/usePopup";
+import { useRouter } from "next/navigation";
 
 interface GameSettingsProps {
 	game: Game;
-	onGameStart: (lobbySettings: any) => void;
 }
 
-const GameSettings: React.FC<GameSettingsProps> = ({ game, onGameStart }) => {
+const GameSettings: React.FC<GameSettingsProps> = ({ game }) => {
 	const { hide } = usePopup();
 	const [settings, setSettings] = useState<Record<string, Setting>>(game.settings || {});
+	const router = useRouter();
 
 	const updateSettingValue = (settingKey: string, optionKey: string, updatedValue: SettingValue) => {
 		setSettings(prev => ({
@@ -99,8 +100,9 @@ const GameSettings: React.FC<GameSettingsProps> = ({ game, onGameStart }) => {
 	}
 
 	const handleStartClick = () => {
-		const lobbySettings = mapToLobby();		
-		onGameStart(lobbySettings);
+		const lobbySettings = mapToLobby();
+		sessionStorage.setItem('settings', JSON.stringify(lobbySettings));
+		router.push('/games/guess-song');
 		hide();
 	}
 

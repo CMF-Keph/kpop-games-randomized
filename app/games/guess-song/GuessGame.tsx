@@ -219,7 +219,6 @@ const GuessGame: React.FC<GuessGameProps> = ({ lobby, groups, onReturn }) => {
             setScore(score + points);
         }
 
-        // Mostrar ScoreScreen con preview y botón siguiente
         scoreScreen.show(
             <RewardScreen
                 score={points}

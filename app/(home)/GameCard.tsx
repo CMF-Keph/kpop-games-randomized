@@ -7,10 +7,9 @@ import GameSettings from "./GameSettings";
 
 interface GameCardProps {
 	game: Game;
-	onGameStart: (lobbySettings: any) => void;
 }
 
-const GameCard: React.FC<GameCardProps> = ({ game, onGameStart }) => {
+const GameCard: React.FC<GameCardProps> = ({ game }) => {
 	const Icon = game.icon;
 	const { show } = usePopup();
 
@@ -18,7 +17,7 @@ const GameCard: React.FC<GameCardProps> = ({ game, onGameStart }) => {
 		<button
 			className="bg-white rounded-2xl relative group p-6 shadow-lg hover:shadow-2xl disabled:hover:shadow-lg transition-all duration-300 hover:-translate-y-2 text-left cursor-pointer disabled:hover:translate-y-0 disabled:opacity-75 disabled:cursor-default"
 			disabled={!game.available}
-			onClick={() => show(<GameSettings onGameStart={onGameStart} game={game}></GameSettings>, game.name)}
+			onClick={() => show(<GameSettings game={game}></GameSettings>, game.name)}
 		>
 			<div className={`absolute flex items-center justify-center top-6 right-6 w-12 h-12 rounded-full bg-linear-to-br ${game.color} opacity-60 group-disabled:group-hover:opacity-60 group-hover:opacity-100 transition-opacity`}>
 				<Icon className="w-6 h-6 text-white" />

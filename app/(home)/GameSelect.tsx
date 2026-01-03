@@ -3,11 +3,7 @@
 import { GAMES } from "../games"
 import GameCard from "./GameCard"
 
-interface GameSelectProps {
-	onGameStart: (lobbySettings: any) => void;
-}
-
-const GameSelect: React.FC<GameSelectProps> = ({ onGameStart }) => {
+const GameSelect = () => {
 	return (
 		<div className="flex flex-col p-4 gap-12">
 			<div className="flex flex-col gap-4">
@@ -16,7 +12,7 @@ const GameSelect: React.FC<GameSelectProps> = ({ onGameStart }) => {
 			</div>
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 				{
-					GAMES.map((game) => <GameCard onGameStart={onGameStart} key={game.id} game={game}></GameCard>)
+					GAMES.map((game) => <GameCard key={game.id} game={game}></GameCard>)
 				}
 			</div>
 		</div>
