@@ -1,13 +1,14 @@
 type RoundPhase = 'waiting' | 'playing'| 'guessing' | 'results' | 'listening';
 
 export interface GameState {
-	status: 'playing' | 'finished';
+	status: 'idle' | 'playing' | 'finished';
 	phase: RoundPhase;
 	currentRound: number;
 	totalRounds: number;
 	remainingTries: number;
-	options: Option[];
-	modes: string[];
+	currentSongs: Song[] | null;
+	correctSong: Song | null;
+	selectedAnswer: string | null;
 }
 
 export interface PlayerScore {
@@ -17,13 +18,28 @@ export interface PlayerScore {
 	correctAnswers: number;
 }
 
+export interface GameSettings {
+	values: Record<string, any>;
+}
+
+export interface Song {
+	id: string;
+	title: string;
+	views: number;
+	youtubeId: string;
+	youtubeUploadedAt: Date;
+	youtubeThumbnail: string;	
+}
+
 export interface UseGameModel {
 	gameState: GameState;
 	playerScore: PlayerScore;
-	startGame: (options: Option[]) => void;
-	submitAnwser: (anwserId: string) => void;
+	startGame: () => void;
+	submitAnwser: () => void;
 	playSong: () => void;	
+	selectAnswer: (answerId: string) => void;
 }
+
 
 export interface Option {
   videoId: string;

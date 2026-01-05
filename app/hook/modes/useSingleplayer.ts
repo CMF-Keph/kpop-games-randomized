@@ -1,42 +1,59 @@
-import { Lobby } from "@/app/games";
-import { GameState, PlayerScore, UseGameModel, Option } from "@/app/types/game";
-import { nanoid } from "nanoid";
+import { GameState, PlayerScore, UseGameModel, GameSettings, Song } from "@/app/types/game";
 import { useState } from "react";
 
-export const useSingleplayer = (): UseGameModel => {
+interface UseSinglePlayerProps {
+	settings: GameSettings;
+	songs: Song[];
+	playerId: string;
+	nickname: string;
+}
+
+export const useSingleplayer = ({ settings, songs, playerId, nickname }: UseSinglePlayerProps): UseGameModel => {
 	const [gameState, setGameState] = useState<GameState>({
-		status: 'playing',
-		phase: 'playing',
+		status: 'idle',
+		phase: 'waiting',
 		currentRound: 0,
-		totalRounds: 10,
+		totalRounds: settings.values['total-rounds'],
 		remainingTries: 3,
-		options: [],
-		modes: []
+		currentSongs: null,
+		correctSong: null,
+		selectedAnswer: null
 	});
+
 	const [playerScore, setPlayerScore] = useState<PlayerScore>({
-		playerId: nanoid(12),
-		nickname: 'test',
+		playerId: playerId,
+		nickname: nickname,
 		score: 0,
 		correctAnswers: 0
 	});
 
-	const startGame = (options: Option[]): void => {
-		var settingsFromStorage = sessionStorage.getItem('game-settings');
+	const shuffleSongs = (): Song[] => {
+		const available = [...songs];
+		const selected: Song[] = [];
 
-		if (!settingsFromStorage) return;
+		for (let i = 0; i < 4 && available.length > 0; i++) {
+			const randomIndex = Math.floor(Math.random() * available.length);
+			selected.push(available[randomIndex]);
+			available.splice(randomIndex, 1);
+		}
 
-		var gameSettings = JSON.parse(settingsFromStorage) as Lobby;
+		return selected;
+	}
 
+	const startGame = (): void => {
+		var shuffledSongs = shuffleSongs();
+		var correctSong = shuffledSongs[Math.floor(Math.random() * shuffledSongs.length)];
 		setGameState(prev => {
 			return {
 				...prev,
-				totalRounds: gameSettings.settings['total-rounds'],
-				options: options
+				status: 'playing',
+				currentSongs: shuffledSongs,
+				correctSong: correctSong
 			}
 		});
 	}
 
-	const submitAnwser = (answerId: string): void => {
+	const submitAnwser = (): void => {
 
 	}
 
@@ -44,11 +61,21 @@ export const useSingleplayer = (): UseGameModel => {
 
 	}
 
+	const selectAnswer = (answerId: string): void => {
+		setGameState(prev => {
+			return {
+				...prev,
+				selectedAnswer: prev.selectedAnswer === answerId ? null : answerId
+			}
+		});
+	}
+
 	return {
 		gameState,
 		playerScore,
 		startGame,
 		submitAnwser,
-		playSong
+		playSong,
+		selectAnswer
 	}
 }

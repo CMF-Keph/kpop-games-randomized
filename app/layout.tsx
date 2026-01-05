@@ -6,6 +6,11 @@ import Popup from "./shared/Popup";
 import ScoreScreen from "./shared/ScoreScreen";
 import ScoreScreenProvider from "./provider/ScoreScreenProvider";
 
+(BigInt.prototype as any).toJSON = function () {
+  const int = Number.parseInt(this.toString());
+  return int ?? this.toString();
+};
+
 const montserrat = Montserrat({
   subsets: ["latin"],
 });

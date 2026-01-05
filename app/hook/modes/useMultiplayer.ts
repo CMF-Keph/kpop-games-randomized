@@ -13,8 +13,9 @@ export const useMultiplayer = ({ lobbyCode }: UseMultiplayerOptions ): UseGameMo
 				currentRound: 0,
 				totalRounds: 10,
 				remainingTries: 3,
-				options: [],
-				modes: []
+				currentSongs: null,
+				correctSong: null,
+				selectedAnswer: null
 			});
 			const [playerScore, setPlayerScore] = useState<PlayerScore>({
 				playerId: nanoid(12),
@@ -27,12 +28,16 @@ export const useMultiplayer = ({ lobbyCode }: UseMultiplayerOptions ): UseGameMo
 	
 			}
 	
-			const submitAnwser = (answerId: string) => void {
+			const submitAnwser = () => void {
 	
 			}
 	
 			const playSong = () => void {
 	
+			}
+			
+			const selectAnswer = (answerId: string): void => {
+
 			}
 	
 			return {
@@ -40,6 +45,7 @@ export const useMultiplayer = ({ lobbyCode }: UseMultiplayerOptions ): UseGameMo
 				playerScore,
 				startGame,
 				submitAnwser,
-				playSong
+				playSong,
+				selectAnswer
 			}
 }

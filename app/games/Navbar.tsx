@@ -1,15 +1,12 @@
 import { ArrowLeftIcon, ChevronDown } from "lucide-react"
+import Link from "next/link"
 
-interface NavbarProps {
-  onReturn: () => void;
-}
-
-const Navbar: React.FC<NavbarProps> = ({ onReturn }) => {
+const Navbar: React.FC = () => {
   return (
     <div className="grid grid-cols-3 p-4">
-      <button onClick={onReturn} className="flex gap-1 items-center text-slate-700 group font-medium cursor-pointer">
+      <Link href="/" className="flex gap-1 items-center text-slate-700 group font-medium cursor-pointer">
         <ArrowLeftIcon size={16} className="group-hover:translate-x-[-3.25px] transition-transform duration-100" /> Back
-      </button>
+      </Link>
       <div className="flex items-center gap-3 hover:scale-105 duration-300 cursor-pointer justify-center">
         <div className="flex flex-col items-center">
           <span className="text-sm text-slate-700 leading-tight">

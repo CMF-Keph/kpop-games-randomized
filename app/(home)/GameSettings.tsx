@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Game, Lobby, Setting, SettingValue } from "../games";
 import { usePopup } from "../hook/usePopup";
 import { useRouter } from "next/navigation";
+import { GameSettings as Settings } from "../types/game";
 
 interface GameSettingsProps {
 	game: Game;
@@ -69,13 +70,13 @@ const GameSettings: React.FC<GameSettingsProps> = ({ game }) => {
 		}
 	}
 
-	const mapToLobby = (): Lobby => {
-		let lobbySettings: Record<string, any> = {};
+	const mapToSettings = (): Settings => {
+		let gameSettings: Record<string, any> = {};
 
 		Object.entries(settings).map(([key, setting]) => {
 			switch (setting.type) {
 				case 'input':
-					lobbySettings = {...lobbySettings, [key]: setting.values['input-value'].value };
+					gameSettings = {...gameSettings, [key]: setting.values['input-value'].value };
 					break;
 				case 'checkbox':
 					const selectedValues: string[] = [];
@@ -83,26 +84,24 @@ const GameSettings: React.FC<GameSettingsProps> = ({ game }) => {
 						if (option.checked)
 							selectedValues.push(key);
 					});
-					lobbySettings = {...lobbySettings, [key]: selectedValues };
+					gameSettings = {...gameSettings, [key]: selectedValues };
 					break;
 				default:
 					console.info(key, setting, 'type not matched');
-					lobbySettings = {...lobbySettings};
+					gameSettings = {...gameSettings};
 					break;
 			}			
 		})				
 
-		return {
-			id: 'test-uuid',
-			type: game.id,
-			settings: lobbySettings
-		} as Lobby;
+		return {			
+			values: gameSettings
+		};
 	}
 
 	const handleStartClick = () => {
-		const lobbySettings = mapToLobby();
-		sessionStorage.setItem('game-settings', JSON.stringify(lobbySettings));
-		router.push('/games/guess-song');
+		const gameSettings = mapToSettings();
+		sessionStorage.setItem('game-settings', JSON.stringify(gameSettings));
+		router.push('/games/listen-and-guess');
 		hide();
 	}
 
