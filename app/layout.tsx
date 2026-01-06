@@ -3,8 +3,6 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 import PopupProvider from "./provider/PopupProvider";
 import Popup from "./shared/Popup";
-import ScoreScreen from "./shared/ScoreScreen";
-import ScoreScreenProvider from "./provider/ScoreScreenProvider";
 
 (BigInt.prototype as any).toJSON = function () {
   const int = Number.parseInt(this.toString());
@@ -31,15 +29,12 @@ export default function RootLayout({
         className={`${montserrat.className} antialiased min-h-screen bg-linear-to-br from-pink-50 via-purple-50 to-blue-50`}
       >
         <PopupProvider>
-          <ScoreScreenProvider>
-            <Popup></Popup>
-            <ScoreScreen></ScoreScreen>
-            <main
-              className="max-w-6xl mx-auto"
-            >
-              {children}
-            </main>
-          </ScoreScreenProvider>
+          <Popup></Popup>
+          <main
+            className="max-w-6xl mx-auto"
+          >
+            {children}
+          </main>
         </PopupProvider>
       </body>
     </html>
