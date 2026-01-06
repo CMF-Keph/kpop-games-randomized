@@ -10,7 +10,6 @@ const YouTubePlayer = ({ onReady, onEnd }: YouTubePlayerProps) => {
 	const playerRef = useRef<YT.Player | null>(null);
 
 	useEffect(() => {
-		// Cargar la API de YouTube si no está cargada
 		if (!window.YT) {
 			const script = document.createElement('script');
 			script.src = 'https://www.youtube.com/iframe_api';
@@ -25,7 +24,7 @@ const YouTubePlayer = ({ onReady, onEnd }: YouTubePlayerProps) => {
 			if (!containerRef.current || playerRef.current) return;
 
 			playerRef.current = new window.YT.Player(containerRef.current, {
-				height: '0',   // Oculto si solo quieres audio
+				height: '0',
 				width: '0',
 				playerVars: {
 					autoplay: 0,
@@ -44,6 +43,7 @@ const YouTubePlayer = ({ onReady, onEnd }: YouTubePlayerProps) => {
 
 		return () => {
 			playerRef.current?.destroy();
+			playerRef.current = null;
 		};
 	}, []);
 

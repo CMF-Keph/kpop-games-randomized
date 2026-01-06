@@ -18,7 +18,7 @@ const Game = ({ settings, songs }: GameProps) => {
 	const playerId = nanoid(12);
 	const nickname = 'PH';
 
-	const { gameState, playerScore, startGame, submitAnwser, playSong, selectAnswer, registerPlayer, finishRound }
+	const { gameState, playerScore, progress, startGame, submitAnwser, playSong, selectAnswer, registerPlayer, finishRound }
 		= useGame(
 			'singleplayer',
 			{
@@ -33,7 +33,7 @@ const Game = ({ settings, songs }: GameProps) => {
 			<Navbar></Navbar>
 			<YoutubePlayer onReady={registerPlayer} />
 			{gameState.status === 'idle' && <Idle startGame={startGame}></Idle>}
-			{gameState.status === 'playing' && <Playing gameState={gameState} playerScore={playerScore} startGame={startGame} submitAnwser={submitAnwser} playSong={playSong} selectAnswer={selectAnswer} finishRound={finishRound}></Playing>}
+			{gameState.status === 'playing' && <Playing gameState={gameState} playerScore={playerScore} progress={progress} startGame={startGame} submitAnwser={submitAnwser} playSong={playSong} selectAnswer={selectAnswer} finishRound={finishRound}></Playing>}
 			{gameState.status === 'finished' && <Finished playerScore={playerScore}></Finished>}
 		</div>
 	)

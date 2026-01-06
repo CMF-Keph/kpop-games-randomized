@@ -22,22 +22,34 @@ export const useSingleplayer = ({ settings, songs, playerId, nickname }: SingleP
 	});
 
 	const [isFirstTry, setIsFirstTry] = useState<boolean>(true);
+	const [progress, setProgress] = useState(0);
 
 	const playerRef = useRef<YT.Player | null>(null);
 	const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+	const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+	const PLAY_DURATION = 5000;
+	const UPDATE_INTERVAL = 100;
 
 	const registerPlayer = (player: YT.Player) => {
 		playerRef.current = player;
 	};
 
 	const shuffleSongs = (): Song[] => {
-		const available = [...songs];
 		const selected: Song[] = [];
+		let available = [...songs.filter(song => gameState.correctSong?.id !== song.id)];
 
 		for (let i = 0; i < 4 && available.length > 0; i++) {
 			const randomIndex = Math.floor(Math.random() * available.length);
-			selected.push(available[randomIndex]);
-			available.splice(randomIndex, 1);
+			let randomSong = available[randomIndex]
+			selected.push(randomSong);
+
+			if (i === 0) {
+				available = available.filter(song => song.type === randomSong.type && song.id !== randomSong.id);
+			}
+			else {
+				available = available.filter(song => song.id !== randomSong.id);
+			}
 		}
 
 		return selected;
@@ -86,9 +98,15 @@ export const useSingleplayer = ({ settings, songs, playerId, nickname }: SingleP
 				setGameState(prev => ({ ...prev, remainingTries: prev.remainingTries - 1, phase: 'listening' }));
 			}
 
-			if (timeoutRef.current) {
-				clearTimeout(timeoutRef.current);
-			}
+			if (intervalRef.current) clearInterval(intervalRef.current);
+			if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+			const startTime = Date.now();
+			intervalRef.current = setInterval(() => {
+				const elapsed = Date.now() - startTime;
+				const newProgress = Math.min((elapsed / PLAY_DURATION) * 100, 100);
+				setProgress(newProgress);
+			}, UPDATE_INTERVAL);
 
 			timeoutRef.current = setTimeout(() => {
 				pauseSong();
@@ -101,6 +119,10 @@ export const useSingleplayer = ({ settings, songs, playerId, nickname }: SingleP
 		if (timeoutRef.current) {
 			clearTimeout(timeoutRef.current);
 			timeoutRef.current = null;
+		}
+		if (intervalRef.current) {
+			clearInterval(intervalRef.current);
+			intervalRef.current = null;
 		}
 		playerRef.current?.pauseVideo();
 	};
@@ -118,7 +140,7 @@ export const useSingleplayer = ({ settings, songs, playerId, nickname }: SingleP
 		if (gameState.currentRound + 1 >= gameState.totalRounds) {
 			setGameState(prev => {
 				return {
-					...prev,					
+					...prev,
 					status: 'finished'
 				}
 			});
@@ -142,6 +164,7 @@ export const useSingleplayer = ({ settings, songs, playerId, nickname }: SingleP
 	return {
 		gameState,
 		playerScore,
+		progress,
 		startGame,
 		submitAnwser,
 		playSong,

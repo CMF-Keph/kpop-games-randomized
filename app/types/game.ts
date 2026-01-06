@@ -32,6 +32,7 @@ export interface Song {
 	youtubeId: string;
 	youtubeUploadedAt: Date;
 	youtubeThumbnail: string;	
+	type: string;
 }
 
 export interface UseGameModel {
@@ -43,6 +44,7 @@ export interface UseGameModel {
 	selectAnswer: (answerId: string) => void;
 	registerPlayer: (player: YT.Player) => void;
 	finishRound: () => void;
+	progress: number;
 }
 
 export interface SinglePlayerSettings {

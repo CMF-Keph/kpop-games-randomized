@@ -7,6 +7,7 @@ import Answer from "./Answer";
 interface PlayingProps {
 	gameState: GameState;
 	playerScore: PlayerScore;
+	progress: number;
 	startGame: () => void;
 	playSong: () => void;
 	submitAnwser: () => void;
@@ -14,7 +15,7 @@ interface PlayingProps {
 	finishRound: () => void;
 }
 
-const Playing = ({ gameState, playerScore, playSong, submitAnwser, selectAnswer, finishRound }: PlayingProps) => {
+const Playing = ({ gameState, playerScore, progress, playSong, submitAnwser, selectAnswer, finishRound }: PlayingProps) => {
 	return (
 		<div className="relative">
 			<div className="h-[calc(100vh-74px)] bg-white shadow-lg rounded-t-xl flex flex-col p-8 gap-4">
@@ -30,7 +31,9 @@ const Playing = ({ gameState, playerScore, playSong, submitAnwser, selectAnswer,
 									<span>{(gameState.maxTries - i) * 100}</span>
 									<div className="w-full bg-white p-1 rounded-lg transition-opacity duration-300"
 										style={
-											{ opacity: gameState.remainingTries !== (gameState.maxTries - i) ? '0.5' : '1' }
+											{ opacity: gameState.remainingTries !== (gameState.maxTries - i) ? '0.25' : '1',
+												animation: gameState.remainingTries !== (gameState.maxTries - i) ? '' : 'var(--animate-pulse)'
+											 }
 										}></div>
 								</div>
 							))}
@@ -38,10 +41,10 @@ const Playing = ({ gameState, playerScore, playSong, submitAnwser, selectAnswer,
 					</div>
 					<div className="flex items-center justify-center gap-1 h-24 w-full relative">
 						<div className="p-2 rounded-full bg-white/50 w-full shadow shadow-purple"></div>
-						<div className="absolute top-10 left-0 p-2 rounded-full bg-linear-to-r bg-white transition-all duration-100" style={{ width: `100%` }}></div>
+						<div className="absolute top-10 left-0 p-2 rounded-full bg-linear-to-r bg-white transition-all duration-100" style={{ width: `${progress}%` }}></div>
 						<div className="flex justify-between w-full absolute top-16 px-2">
-							<span>0 s</span>
-							<span>0 s</span>
+							<span>1 s</span>
+							<span>5 s</span>
 						</div>
 					</div>
 					<button onClick={playSong} disabled={gameState.phase === 'listening' || gameState.phase === 'results'} className="bg-white rounded-full p-4 shadow-lg hover:scale-105 transition-transform duration-150 cursor-pointer disabled:opacity-75 disabled:cursor-default">
@@ -49,7 +52,7 @@ const Playing = ({ gameState, playerScore, playSong, submitAnwser, selectAnswer,
 					</button>
 				</div>
 				<div className="grid grid-cols-2 gap-2">
-					{gameState.currentSongs?.map(song => <Answer key={song.id} song={song} selectAnswer={selectAnswer} selectedAnswer={gameState.selectedAnswer} phase={gameState.phase} correctSongId={gameState.correctSong?.id} />)}
+					{gameState.currentSongs?.map(song => <Answer key={song.id} song={song} selectAnswer={selectAnswer} selectedAnswer={gameState.selectedAnswer} phase={gameState.phase} correctSongId={gameState.correctSong!.id} />)}
 				</div>
 				{
 					gameState.phase !== 'results' &&
