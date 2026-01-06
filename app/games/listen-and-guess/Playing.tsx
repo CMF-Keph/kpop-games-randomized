@@ -3,7 +3,6 @@
 import { GameState, PlayerScore, UseGameModel } from "@/app/types/game"
 import { Play } from "lucide-react";
 import Answer from "./Answer";
-import { useState } from "react";
 
 interface PlayingProps {
 	gameState: GameState;
@@ -12,9 +11,10 @@ interface PlayingProps {
 	playSong: () => void;
 	submitAnwser: () => void;
 	selectAnswer: (anwserId: string) => void;
+	finishRound: () => void;
 }
 
-const Playing = ({ gameState, playerScore, startGame, playSong, submitAnwser, selectAnswer }: PlayingProps) => {
+const Playing = ({ gameState, playerScore, playSong, submitAnwser, selectAnswer, finishRound }: PlayingProps) => {
 	return (
 		<div className="relative">
 			<div className="h-[calc(100vh-74px)] bg-white shadow-lg rounded-t-xl flex flex-col p-8 gap-4">
@@ -24,10 +24,14 @@ const Playing = ({ gameState, playerScore, startGame, playSong, submitAnwser, se
 				</div>
 				<div className="bg-linear-to-r from-pink-400 to-purple-400 rounded-lg shadow p-8 flex items-center justify-center flex-col gap-2 text-shadow-lg text-gray-100 font-semibold">
 					<div className="flex flex-col gap-4 w-full items-center mb-4">
-						<div className={`grid grid-cols-3 gap-4 w-8/12`}>
-							{[...Array(3)].map((_, i) => (
+						<div className={`grid grid-cols-3 gap-4 w-8/12`} style={{ gridTemplateColumns: `repeat(${gameState.maxTries}, minmax(0, 1fr))` }}>
+							{[...Array(gameState.maxTries)].map((_, i) => (
 								<div className="flex flex-col items-center gap-2" key={i}>
-									<div className="w-full bg-white p-1 rounded-lg transition-opacity duration-300"></div>
+									<span>{(gameState.maxTries - i) * 100}</span>
+									<div className="w-full bg-white p-1 rounded-lg transition-opacity duration-300"
+										style={
+											{ opacity: gameState.remainingTries !== (gameState.maxTries - i) ? '0.5' : '1' }
+										}></div>
 								</div>
 							))}
 						</div>
@@ -40,16 +44,25 @@ const Playing = ({ gameState, playerScore, startGame, playSong, submitAnwser, se
 							<span>0 s</span>
 						</div>
 					</div>
-					<button className="bg-white rounded-full p-4 shadow-lg hover:scale-105 transition-transform duration-150 cursor-pointer disabled:opacity-75 disabled:cursor-default">
+					<button onClick={playSong} disabled={gameState.phase === 'listening' || gameState.phase === 'results'} className="bg-white rounded-full p-4 shadow-lg hover:scale-105 transition-transform duration-150 cursor-pointer disabled:opacity-75 disabled:cursor-default">
 						<Play size={36} className="text-purple-600"></Play>
 					</button>
 				</div>
 				<div className="grid grid-cols-2 gap-2">
-					{gameState.currentSongs?.map(song => <Answer song={song} selectAnswer={selectAnswer} selectedAnswer={gameState.selectedAnswer} />)}
+					{gameState.currentSongs?.map(song => <Answer key={song.id} song={song} selectAnswer={selectAnswer} selectedAnswer={gameState.selectedAnswer} phase={gameState.phase} correctSongId={gameState.correctSong?.id} />)}
 				</div>
-				<button onClick={submitAnwser} disabled={!gameState.selectedAnswer} className="w-full bg-linear-to-r from-pink-500 to-purple-500 rounded-lg shadow p-4 text-white font-medium hover:to-purple-600 transition-colors duration-300 cursor-pointer disabled:cursor-default disabled:opacity-50">
-					Guess the song!
-				</button>
+				{
+					gameState.phase !== 'results' &&
+					<button onClick={submitAnwser} disabled={!gameState.selectedAnswer || gameState.phase !== 'guessing'} className="w-full bg-linear-to-r from-pink-500 to-purple-500 rounded-lg shadow p-4 text-white font-medium hover:to-purple-600 transition-colors duration-300 cursor-pointer disabled:cursor-default disabled:opacity-50">
+						Guess the song!
+					</button>
+				}
+				{
+					gameState.phase === 'results' &&
+					<button onClick={finishRound} disabled={gameState.phase !== 'results'} className="w-full bg-linear-to-r from-pink-500 to-purple-500 rounded-lg shadow p-4 text-white font-medium hover:to-purple-600 transition-colors duration-300 cursor-pointer disabled:cursor-default disabled:opacity-50">
+						Next round!
+					</button>
+				}
 			</div>
 		</div>
 	)

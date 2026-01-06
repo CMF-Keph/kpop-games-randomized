@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Game, Lobby, Setting, SettingValue } from "../games";
+import { Game, Setting, SettingValue } from "@/app/types/game";
 import { usePopup } from "../hook/usePopup";
 import { useRouter } from "next/navigation";
 import { GameSettings as Settings } from "../types/game";

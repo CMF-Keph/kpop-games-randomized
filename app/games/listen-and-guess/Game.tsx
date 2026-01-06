@@ -6,6 +6,8 @@ import { nanoid } from "nanoid";
 import Playing from "./Playing";
 import Navbar from "../Navbar";
 import Idle from "./Idle";
+import YoutubePlayer from "./YoutubePlayer";
+import Finished from "./Finished";
 
 interface GameProps {
 	settings: GameSettings;
@@ -16,20 +18,20 @@ const Game = ({ settings, songs }: GameProps) => {
 	const playerId = nanoid(12);
 	const nickname = 'PH';
 
-	const { gameState, playerScore, startGame, submitAnwser, playSong, selectAnswer } = useSingleplayer({
+	const { gameState, playerScore, startGame, submitAnwser, playSong, selectAnswer, registerPlayer, finishRound } = useSingleplayer({
 		settings,
 		songs,
 		playerId,
 		nickname
 	});
 
-	console.log(gameState);
-
 	return (
 		<div className="relative">
 			<Navbar></Navbar>
+			<YoutubePlayer onReady={registerPlayer} />
 			{gameState.status === 'idle' && <Idle startGame={startGame}></Idle>}
-			{gameState.status === 'playing' && <Playing gameState={gameState} playerScore={playerScore} startGame={startGame} submitAnwser={submitAnwser} playSong={playSong} selectAnswer={selectAnswer}></Playing>}
+			{gameState.status === 'playing' && <Playing gameState={gameState} playerScore={playerScore} startGame={startGame} submitAnwser={submitAnwser} playSong={playSong} selectAnswer={selectAnswer} finishRound={finishRound}></Playing>}
+			{gameState.status === 'finished' && <Finished playerScore={playerScore}></Finished>}
 		</div>
 	)
 }

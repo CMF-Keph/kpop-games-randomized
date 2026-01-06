@@ -1,6 +1,5 @@
 'use client'
 
-import { GameState } from "@/app/types/game";
 import { Play } from "lucide-react";
 
 interface IdleProps {		

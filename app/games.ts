@@ -1,6 +1,5 @@
-import { ArrowUpDown, Grid2x2X, LucideIcon, Music } from "lucide-react";
-
-export type GameType = 'guess-song-snippet' | 'higher-lower' | 'save-one';
+import { ArrowUpDown, Grid2x2X, Music } from "lucide-react";
+import { Game, GameType } from "./types/game";
 
 export const GAMES: Game[] = [
 	{
@@ -23,6 +22,15 @@ export const GAMES: Game[] = [
 					['max-value']: { value: 20 }
 				}
 			},
+			['tries']: {
+				type: 'input',
+				label: 'How many tries for each round?',
+				values: {
+					['input-value']: { value: 3 },
+					['min-value']: { value: 1 },
+					['max-value']: { value: 5 }
+				}
+			},
 			['modes']: {
 				type: 'checkbox',
 				label: 'Which ruleset you want to play?',
@@ -32,7 +40,7 @@ export const GAMES: Game[] = [
 					['BB']: { value: 'Boy Groups', checked: true },
 					['SOLO']: { value: 'Soloists', checked: true }
 				},
-			}
+			},
 		}
 	},
 	{
@@ -52,48 +60,3 @@ export const GAMES: Game[] = [
 		available: false
 	},
 ];
-
-export type ModesSettings = 'all' | 'only-girl-groups' | 'only-boy-groups'
-
-export interface Game {
-	id: GameType;
-	name: string;
-	description: string;
-	color: string;
-	icon: LucideIcon;
-	available: boolean;
-	settings?: Record<string, Setting>;
-}
-
-export interface Setting {
-	type: SettingType;
-	label: string;
-	values: Record<string, SettingValue>;
-}
-
-export type SettingType = 'checkbox' | 'input';
-
-
-export interface SettingValue {
-	value: any;
-	checked?: boolean;
-}
-
-export interface Lobby {
-	id: string;
-	type: GameType;
-	settings: Record<string, any>;
-}
-
-export interface Option {
-  videoId: string;
-  answer: string;
-  audioUrl: string;
-  correct: boolean;
-	type: string;
-	thumbnail: string;
-}
-
-export interface ActiveGame {
-  options: Option[];
-}

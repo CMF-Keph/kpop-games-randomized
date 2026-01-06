@@ -1,4 +1,6 @@
-type RoundPhase = 'waiting' | 'playing'| 'guessing' | 'results' | 'listening';
+import { LucideIcon } from "lucide-react";
+
+export type RoundPhase = 'waiting' | 'playing'| 'guessing' | 'results' | 'listening';
 
 export interface GameState {
 	status: 'idle' | 'playing' | 'finished';
@@ -6,6 +8,7 @@ export interface GameState {
 	currentRound: number;
 	totalRounds: number;
 	remainingTries: number;
+	maxTries: number;
 	currentSongs: Song[] | null;
 	correctSong: Song | null;
 	selectedAnswer: string | null;
@@ -38,14 +41,39 @@ export interface UseGameModel {
 	submitAnwser: () => void;
 	playSong: () => void;	
 	selectAnswer: (answerId: string) => void;
+	registerPlayer: (player: YT.Player) => void;
+	finishRound: () => void;
 }
 
 
-export interface Option {
-  videoId: string;
-  answer: string;
-  audioUrl: string;
-  correct: boolean;
-	type: string;
-	thumbnail: string;
+// Game types
+
+export type GameType = 'guess-song-snippet' | 'higher-lower' | 'save-one';
+
+export type ModesSettings = 'all' | 'only-girl-groups' | 'only-boy-groups'
+
+export interface Game {
+	id: GameType;
+	name: string;
+	description: string;
+	color: string;
+	icon: LucideIcon;
+	available: boolean;
+	settings?: Record<string, Setting>;
 }
+
+export interface Setting {
+	type: SettingType;
+	label: string;
+	values: Record<string, SettingValue>;
+}
+
+export type SettingType = 'checkbox' | 'input';
+
+
+export interface SettingValue {
+	value: any;
+	checked?: boolean;
+}
+
+
