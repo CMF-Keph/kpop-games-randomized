@@ -4,11 +4,11 @@ import { GameSettings, Song } from "@/app/types/game"
 import { useEffect, useState } from "react";
 import Game from "./Game";
 
-interface GameContainerProps {
+interface ContainerProps {
 	settings: GameSettings;
 }
 
-const GameContainer = ({ settings }: GameContainerProps) => {
+const Container = ({ settings }: ContainerProps) => {
 	const [songs, setSongs] = useState<Song[] | null>(null);	
 
 	useEffect(() => {
@@ -25,4 +25,4 @@ const GameContainer = ({ settings }: GameContainerProps) => {
 	return <Game settings={settings} songs={songs}></Game> 	
 }
 
-export default GameContainer
+export default Container

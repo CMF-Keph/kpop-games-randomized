@@ -3,7 +3,7 @@
 import { GameSettings } from "@/app/types/game";
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react";
-import GameContainer from "./GameContainer";
+import Container from "./Container";
 
 const ListenAndGuessPage = () => {
 	const router = useRouter();
@@ -23,7 +23,7 @@ const ListenAndGuessPage = () => {
 	if (!settings) return <div>Cargando...</div>
 
 	return (
-		<GameContainer settings={settings}></GameContainer>
+		<Container settings={settings}></Container>
 	)
 }
 
