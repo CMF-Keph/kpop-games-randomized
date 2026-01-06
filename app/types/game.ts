@@ -45,6 +45,17 @@ export interface UseGameModel {
 	finishRound: () => void;
 }
 
+export interface SinglePlayerSettings {
+	settings: GameSettings;
+	songs: Song[];
+	playerId: string;
+	nickname: string;
+}
+
+export interface MultiPlayerSettings {
+	
+}
+
 
 // Game types
 

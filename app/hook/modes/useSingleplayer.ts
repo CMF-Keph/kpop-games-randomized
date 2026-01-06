@@ -1,14 +1,7 @@
-import { GameState, PlayerScore, UseGameModel, GameSettings, Song } from "@/app/types/game";
+import { GameState, PlayerScore, UseGameModel, Song, SinglePlayerSettings } from "@/app/types/game";
 import { useRef, useState } from "react";
 
-interface UseSinglePlayerProps {
-	settings: GameSettings;
-	songs: Song[];
-	playerId: string;
-	nickname: string;
-}
-
-export const useSingleplayer = ({ settings, songs, playerId, nickname }: UseSinglePlayerProps): UseGameModel => {
+export const useSingleplayer = ({ settings, songs, playerId, nickname }: SinglePlayerSettings): UseGameModel => {
 	const [gameState, setGameState] = useState<GameState>({
 		status: 'idle',
 		phase: 'waiting',
@@ -140,7 +133,7 @@ export const useSingleplayer = ({ settings, songs, playerId, nickname }: UseSing
 				currentRound: prev.currentRound + 1,
 				currentSongs: shuffledSongs,
 				correctSong: correctSong,
-				remainingTries: settings.values['tries'],
+				remainingTries: Number(settings.values['tries']),
 				phase: 'playing'
 			}
 		});
