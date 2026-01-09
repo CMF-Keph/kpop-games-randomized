@@ -81,8 +81,7 @@ export interface Setting {
 	values: Record<string, SettingValue>;
 }
 
-export type SettingType = 'checkbox' | 'input';
-
+export type SettingType = 'checkbox' | 'input' | 'radio';
 
 export interface SettingValue {
 	value: any;

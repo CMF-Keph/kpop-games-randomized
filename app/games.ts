@@ -11,6 +11,15 @@ export const GAMES: Game[] = [
 		available: true,
 		settings:
 		{
+			['style']: {
+				type: 'radio',
+				label: 'How do you want to play?',
+				values: 
+				{
+					['singleplayer']: { value: 'Singleplayer', checked: true },
+					['multiplayer']: { value: 'Multiplayer', checked: false }
+				}
+			},
 			['total-rounds']:
 			{
 				type: 'input',

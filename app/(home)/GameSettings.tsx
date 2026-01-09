@@ -42,6 +42,31 @@ const GameSettings: React.FC<GameSettingsProps> = ({ game }) => {
 		return <div className="flex flex-col md:flex-row gap-2 w-full justify-between">{checkBoxes}</div>
 	}
 
+	const generateRadioSection = (setting: Setting, settingKey: string): React.ReactNode => {
+		var checkBoxes = Object.entries(setting.values).map(([key, settingValue]) => {
+			const [checked, setChecked] = useState<boolean>(false);
+			return (
+				<div
+					key={key}
+					className={`cursor-pointer p-2 w-full transition-colors rounded-lg ${checked ? 'bg-blue-500 hover:bg-blue-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}					
+					onClick={() => {
+						setChecked(prev => !prev);
+					}}
+				>
+					<input
+						type="radio"
+						className="hide"
+						name={"test"}
+						onChange={(e) => updateSettingValue(settingKey, key, { ...settingValue, checked: e.target.checked })}
+					/>
+					{settingValue.value}
+				</div>
+			)
+		});
+
+		return <div className="flex flex-col md:flex-row gap-2 w-full justify-between">{checkBoxes}</div>
+	}
+
 	const generateInputSection = (setting: Setting, settingsKey: string): React.ReactNode => {
 		var defaultValue = setting.values['input-value']?.value;
 		var minValue = setting.values['min-value']?.value;
@@ -65,6 +90,8 @@ const GameSettings: React.FC<GameSettingsProps> = ({ game }) => {
 				return generateInputSection(setting, key);
 			case 'checkbox':
 				return generateCheckboxSection(setting, key);
+			case 'radio':
+				return generateRadioSection(setting, key);
 			default:
 				return '';
 		}
@@ -76,7 +103,7 @@ const GameSettings: React.FC<GameSettingsProps> = ({ game }) => {
 		Object.entries(settings).map(([key, setting]) => {
 			switch (setting.type) {
 				case 'input':
-					gameSettings = {...gameSettings, [key]: setting.values['input-value'].value };
+					gameSettings = { ...gameSettings, [key]: setting.values['input-value'].value };
 					break;
 				case 'checkbox':
 					const selectedValues: string[] = [];
@@ -84,16 +111,16 @@ const GameSettings: React.FC<GameSettingsProps> = ({ game }) => {
 						if (option.checked)
 							selectedValues.push(key);
 					});
-					gameSettings = {...gameSettings, [key]: selectedValues };
+					gameSettings = { ...gameSettings, [key]: selectedValues };
 					break;
 				default:
 					console.info(key, setting, 'type not matched');
-					gameSettings = {...gameSettings};
+					gameSettings = { ...gameSettings };
 					break;
-			}			
-		})				
+			}
+		})
 
-		return {			
+		return {
 			values: gameSettings
 		};
 	}
@@ -109,12 +136,12 @@ const GameSettings: React.FC<GameSettingsProps> = ({ game }) => {
 		<div className="flex flex-col gap-6 h-full justify-between">
 			<div className="flex flex-col gap-6">
 				{Object.entries(settings).map(([key, setting]) => (
-				<div key={key} className="flex flex-col">
-					<label className="font-medium mb-2 text-lg text-pink-900">{setting.label}</label>
-					{settingToHtml(setting, key)}
-				</div>
-			))}
-			</div>			
+					<div key={key} className="flex flex-col">
+						<label className="font-medium mb-2 text-lg text-pink-900">{setting.label}</label>
+						{settingToHtml(setting, key)}
+					</div>
+				))}
+			</div>
 			<button onClick={handleStartClick} className="bg-linear-to-r from-purple-500 to-pink-500 text-white shadow-md p-2 rounded-lg transition-colors hover:to-pink-700 cursor-pointer">Start game!</button>
 		</div>
 	)

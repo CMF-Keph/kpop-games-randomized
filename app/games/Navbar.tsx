@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, ChevronDown } from "lucide-react"
+import { ArrowLeftIcon } from "lucide-react"
 import Link from "next/link"
 
 const Navbar: React.FC = () => {
@@ -17,9 +17,7 @@ const Navbar: React.FC = () => {
           </span>
         </div>
       </div>
-      <div className="flex justify-end gap-2 items-center font-medium text-slate-700">
-        Me <ChevronDown size={16}></ChevronDown>
-      </div>
+      <div className="flex justify-end gap-2 items-center font-medium text-slate-700"></div>
     </div>
   )
 }
